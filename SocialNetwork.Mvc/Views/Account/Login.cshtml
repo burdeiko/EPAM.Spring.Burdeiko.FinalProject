@@ -1,0 +1,13 @@
+﻿@model SocialNetwork.Mvc.Models.LogOnViewModel
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+@Html.BeginForm()
+@Html.EditorForModel();
+<input type="submit" value="Submmit"/>
+</form>
+@ViewBag.UserValidated
+
+

@@ -7,6 +7,8 @@ using SocialNetwork.Core.Interfaces;
 using SocialNetwork.Core;
 using Ninject;
 using DependencyResolver;
+using System.Web.Helpers;
+using System.Data.Entity.Validation;
 
 namespace DBInitializer
 {
@@ -16,8 +18,7 @@ namespace DBInitializer
         static void Main(string[] args)
         {
             ResolverConfig.ConfigurateForConsole(kernel);
-            Console.WriteLine(kernel.Get<IUserService>().GetUser(1).EMail);
-            Console.Read();
+            kernel.Get<IUserService>().CreateEntity(new User() { EMail = "timedroll@gmail.com", Id = 1, PasswordHash = Crypto.HashPassword("lzlz"), RoleId = 1 });
         }
 
         private static void FillRolesTable(IService<Role> service)
