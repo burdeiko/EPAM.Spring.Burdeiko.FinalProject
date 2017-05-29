@@ -18,7 +18,6 @@ namespace SocialNetwork.Dal.ORM
         public string E_Mail { get; set; }
 
         [Required]
-        [StringLength(50)]
         public string PasswordHash { get; set; }
 
         public int RoleId { get; set; }

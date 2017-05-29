@@ -12,10 +12,15 @@ namespace SocialNetwork.Mvc.Providers
 {
     public class CustomMembershipProvider : MembershipProvider
     {
-        public IUserService UserService
-        => (IUserService)DependencyResolver.Current.GetService(typeof(IUserService));
+        private readonly IUserService userService;
 
-        public IService<Role> RoleService;
+        private readonly IService<Role> roleService;
+
+        public CustomMembershipProvider(IUserService userService, IService<Role> roleService)
+        {
+            this.userService = userService;
+            this.roleService = roleService;
+        }
         public override string ApplicationName
         {
             get
@@ -186,7 +191,7 @@ namespace SocialNetwork.Mvc.Providers
 
         public override bool ValidateUser(string username, string password)
         {
-            var user = UserService.GetUserByEMail(username);
+            var user = userService.GetUserByEMail(username);
             if (user != null && Crypto.VerifyHashedPassword(user.PasswordHash, password))
             {
                 return true;

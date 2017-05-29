@@ -31,7 +31,7 @@ namespace SocialNetwork.Dal.Infrastructure
         }
         public T GetByPredicate(Expression<Func<T, bool>> predicate)
         {
-            return context.Set<T>().First(predicate);
+            return context.Set<T>().FirstOrDefault(predicate);
         }
 
         public abstract void Update(T entity);

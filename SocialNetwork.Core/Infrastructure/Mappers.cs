@@ -11,6 +11,7 @@ namespace SocialNetwork.Core.Infrastructure
     {
         public static Dal.ORM.User ToDalUser(this User user)
         {
+            if (user == null) return null;
             return new Dal.ORM.User()
             {
                 Id = user.Id,
@@ -23,6 +24,7 @@ namespace SocialNetwork.Core.Infrastructure
 
         public static User ToBllUser(this Dal.ORM.User dalUser)
         {
+            if (dalUser == null) return null;
             return new User()
             {
                 Id = dalUser.Id,
