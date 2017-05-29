@@ -15,7 +15,9 @@ namespace SocialNetwork.Core.Infrastructure
             {
                 Id = user.Id,
                 E_Mail = user.EMail,
-                RoleId = user.RoleId
+                RoleId = user.RoleId,
+                PersonId = user.PersonId,
+                PasswordHash = user.PasswordHash
             };
         }
 
@@ -25,7 +27,9 @@ namespace SocialNetwork.Core.Infrastructure
             {
                 Id = dalUser.Id,
                 EMail = dalUser.E_Mail,
-                RoleId = dalUser.RoleId
+                RoleId = dalUser.RoleId,
+                PersonId = dalUser.PersonId,
+                PasswordHash = dalUser.PasswordHash
             };
         }
 
