@@ -9,5 +9,6 @@ namespace SocialNetwork.Core.Interfaces
     public interface IUserService: IService<User>
     {
         User GetUser(int id);
+        User GetUserByEMail(string email);
     }
 }

@@ -30,6 +30,10 @@ namespace SocialNetwork.Core.Services
             Expression<Func<Dal.ORM.User, bool>> predicateExpression = Expression.Lambda<Func<Dal.ORM.User, bool>>(equalityExp, parameterExp);
             return userRepository.GetByPredicate(predicateExpression).ToBllUser();
         }
+        public User GetUserByEMail(string eMail)
+        {
+            return userRepository.GetByPredicate(ByEMail(eMail)).ToBllUser();
+        }
         public void DeleteEntity(User user)
         {
             userRepository.Delete(user.ToDalUser());
@@ -48,11 +52,7 @@ namespace SocialNetwork.Core.Services
         #region Search Expressions Getters
         public Expression<Func<Dal.ORM.User, bool>> ByEMail(string eMail)
         {
-            return ByProperty(EMailPropertyName, eMail);
-        }
-        public Expression<Func<Dal.ORM.User, bool>> ByRoleId(int roleId)
-        {
-            return ByProperty(EMailPropertyName, roleId);
+            return ByProperty(nameof(Dal.ORM.User.E_Mail), eMail);
         }
         private Expression<Func<Dal.ORM.User, bool>> ByProperty<TProperty>(string propertyName, TProperty propertyValue)
         {
@@ -65,8 +65,6 @@ namespace SocialNetwork.Core.Services
             Expression<Func<Dal.ORM.User, bool>> predicateExpression = Expression.Lambda<Func<Dal.ORM.User, bool>>(equalityExp, parameterExp);
             return predicateExpression;
         }
-        private readonly string EMailPropertyName = "E_Mail";
-        private readonly string RolePropertyName = "RoleId";
         #endregion
     }
 }
