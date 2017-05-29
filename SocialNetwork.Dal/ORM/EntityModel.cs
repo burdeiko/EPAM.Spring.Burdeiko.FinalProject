@@ -1,6 +1,9 @@
 namespace SocialNetwork.Dal.ORM
 {
+    using System;
     using System.Data.Entity;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
 
     public partial class EntityModel : DbContext
     {
@@ -18,11 +21,6 @@ namespace SocialNetwork.Dal.ORM
             modelBuilder.Entity<Role>()
                 .HasMany(e => e.Users)
                 .WithRequired(e => e.Role)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.People)
-                .WithRequired(e => e.User)
                 .WillCascadeOnDelete(false);
         }
     }

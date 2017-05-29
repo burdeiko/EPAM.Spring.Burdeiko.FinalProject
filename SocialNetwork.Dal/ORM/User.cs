@@ -9,12 +9,6 @@ namespace SocialNetwork.Dal.ORM
     [Table("User")]
     public partial class User
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
-        {
-            People = new HashSet<Person>();
-        }
-
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
@@ -25,8 +19,9 @@ namespace SocialNetwork.Dal.ORM
 
         public int RoleId { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Person> People { get; set; }
+        public int? PersonId { get; set; }
+
+        public virtual Person Person { get; set; }
 
         public virtual Role Role { get; set; }
     }
