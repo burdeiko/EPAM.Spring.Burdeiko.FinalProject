@@ -9,7 +9,7 @@ using SocialNetwork.Core.Interfaces;
 
 namespace SocialNetwork.Core.Services
 {
-    public class RoleService: IService<Role>
+    public class RoleService: IRoleService
     {
         private readonly IUnitOfWork uow;
         private readonly IRepository<Dal.ORM.Role> roleRepository;
@@ -33,6 +33,16 @@ namespace SocialNetwork.Core.Services
         {
             roleRepository.Create(role.ToDalRole());
             uow.Commit();
+        }
+        public void UpdateEntity(Role role)
+        {
+            roleRepository.Update(role.ToDalRole());
+            uow.Commit();
+        }
+
+        public Role FindByName(string name)
+        {
+            return roleRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<Dal.ORM.Role, string>(nameof(Dal.ORM.Role.Name), name)).ToBllRole();
         }
         #endregion
     }

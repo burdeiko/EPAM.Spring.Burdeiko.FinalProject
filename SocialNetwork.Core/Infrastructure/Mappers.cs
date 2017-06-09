@@ -14,7 +14,7 @@ namespace SocialNetwork.Core.Infrastructure
             if (user == null) return null;
             return new Dal.ORM.User()
             {
-                Id = user.Id,
+                //Id = user.Id,
                 E_Mail = user.EMail,
                 RoleId = user.RoleId,
                 PersonId = user.PersonId,
@@ -37,6 +37,8 @@ namespace SocialNetwork.Core.Infrastructure
 
         public static Dal.ORM.Role ToDalRole(this Role role)
         {
+            if (role == null)
+                return null;
             return new Dal.ORM.Role()
             {
                 Id = role.id,
@@ -46,6 +48,8 @@ namespace SocialNetwork.Core.Infrastructure
 
         public static Role ToBllRole(this Dal.ORM.Role dalRole)
         {
+            if (dalRole == null)
+                return null;
             return new Role()
             {
                 id = dalRole.Id,

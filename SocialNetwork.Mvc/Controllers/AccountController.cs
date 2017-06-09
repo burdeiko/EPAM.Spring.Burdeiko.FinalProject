@@ -7,37 +7,102 @@ using SocialNetwork.Core.Interfaces;
 using SocialNetwork.Core;
 using Ninject;
 using Ninject.Web.Common;
+using SocialNetwork.Mvc.Models;
+using System.Web.Security;
+using SocialNetwork.Mvc.Providers;
 
 namespace SocialNetwork.Mvc.Controllers
 {
     public class AccountController : Controller
     {
-        public AccountController(IUserService userService, IService<Role> roleService)
+        public AccountController(IUserService userService, IRoleService roleService)
         {
             this.userService = userService;
             this.roleService = roleService;
         }
         private readonly IUserService userService;
-        private readonly IService<Role> roleService;
+        private readonly IRoleService roleService;
         // GET: Account
         public ActionResult Index()
         {
             return View();
         }
         [HttpGet]
-        public ActionResult Login()
+        [AllowAnonymous]
+        public ActionResult Login(string returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+
         [HttpPost]
-        public ActionResult Login(Models.LogOnViewModel model)
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(LogOnViewModel viewModel, string returnUrl)
         {
-            var ms = new Providers.CustomMembershipProvider(userService, roleService);
-            if (ms.ValidateUser(model.EMail, model.Password))
-                ViewBag.UserValidated = true;
-            else
-                ViewBag.UserValidated = false;
+            if (this.User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+            if (ModelState.IsValid)
+            {
+                if (Membership.ValidateUser(viewModel.EMail, viewModel.Password))
+                {
+                    FormsAuthentication.SetAuthCookie(viewModel.EMail, viewModel.RememberMe);
+                    if (Url.IsLocalUrl(returnUrl))
+                    {
+                        
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Incorrect login or password.");
+                }
+            }
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            if (this.User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
             return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(RegisterViewModel viewModel)
+        {
+            var userExists = userService.GetUserByEMail(viewModel.Email) != null;
+
+            if (userExists)
+            {
+                ModelState.AddModelError("", "User with this address already exists.");
+                return View(viewModel);
+            }
+
+            if (ModelState.IsValid)
+            {
+                var membershipUser = ((CustomMembershipProvider)Membership.Provider)
+                    .CreateUser(viewModel.Email, viewModel.Password);
+
+                if (membershipUser != null)
+                {
+                    FormsAuthentication.SetAuthCookie(viewModel.Email, false);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Error occured while trying to registrate.");
+                }
+            }
+            return View(viewModel);
         }
     }
 }

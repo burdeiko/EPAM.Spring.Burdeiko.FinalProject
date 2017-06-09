@@ -11,5 +11,7 @@ namespace SocialNetwork.Core.Interfaces
         void CreateEntity(T entity);
         IEnumerable<T> GetAllEntities();
         void DeleteEntity(T entity);
+
+        void UpdateEntity(T entity);
     }
 }

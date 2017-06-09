@@ -21,13 +21,13 @@ namespace DBInitializer
             kernel.Get<IUserService>().CreateEntity(new User() { EMail = "timedroll@gmail.com", Id = 1, PasswordHash = Crypto.HashPassword("lzlz"), RoleId = 1 });
         }
 
-        private static void FillRolesTable(IService<Role> service)
+        private static void FillRolesTable(IRoleService service)
         {
             service.CreateEntity(new Role() { id = 1, Name = "user" });
             service.CreateEntity(new Role() { id = 2, Name = "moderator" });
             service.CreateEntity(new Role() { id = 3, Name = "admin" });
         }
-        private static void DropRolesTable(IService<Role> service)
+        private static void DropRolesTable(IRoleService service)
         {
             service.DeleteEntity(new Role() { id = 1, Name = "user" });
             service.DeleteEntity(new Role() { id = 2, Name = "moderator" });

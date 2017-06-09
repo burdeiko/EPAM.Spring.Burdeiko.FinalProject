@@ -10,7 +10,11 @@ namespace SocialNetwork.Dal.Infrastructure
         { }
         public override void Update(User entity)
         {
-            throw new NotImplementedException();
+            User user = context.Set<User>().Find(entity.Id);
+            user.E_Mail = entity.E_Mail;
+            user.PasswordHash = entity.PasswordHash;
+            user.PersonId = entity.PersonId;
+            user.RoleId = entity.RoleId;
         }
     }
 }

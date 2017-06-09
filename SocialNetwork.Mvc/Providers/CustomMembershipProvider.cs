@@ -12,33 +12,18 @@ namespace SocialNetwork.Mvc.Providers
 {
     public class CustomMembershipProvider : MembershipProvider
     {
-        private readonly IUserService userService;
-
-        private readonly IService<Role> roleService;
-
-        public CustomMembershipProvider(IUserService userService, IService<Role> roleService)
-        {
-            this.userService = userService;
-            this.roleService = roleService;
-        }
+        private readonly IRoleService roleService = (IRoleService)System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IRoleService));
+        private readonly IUserService userService = (IUserService)System.Web.Mvc.DependencyResolver.Current.GetService(typeof(IUserService));
         public override string ApplicationName
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get; set;
         }
 
         public override bool EnablePasswordReset
         {
             get
             {
-                throw new NotImplementedException();
+                return false;
             }
         }
 
@@ -46,7 +31,7 @@ namespace SocialNetwork.Mvc.Providers
         {
             get
             {
-                throw new NotImplementedException();
+                return false;
             }
         }
 
@@ -54,7 +39,7 @@ namespace SocialNetwork.Mvc.Providers
         {
             get
             {
-                throw new NotImplementedException();
+                return 5;
             }
         }
 
@@ -62,7 +47,7 @@ namespace SocialNetwork.Mvc.Providers
         {
             get
             {
-                throw new NotImplementedException();
+                return 0;
             }
         }
 
@@ -70,7 +55,7 @@ namespace SocialNetwork.Mvc.Providers
         {
             get
             {
-                throw new NotImplementedException();
+                return 5;
             }
         }
 
@@ -78,7 +63,7 @@ namespace SocialNetwork.Mvc.Providers
         {
             get
             {
-                throw new NotImplementedException();
+                return 1;
             }
         }
 
@@ -86,7 +71,7 @@ namespace SocialNetwork.Mvc.Providers
         {
             get
             {
-                throw new NotImplementedException();
+                return MembershipPasswordFormat.Hashed;
             }
         }
 
@@ -102,7 +87,7 @@ namespace SocialNetwork.Mvc.Providers
         {
             get
             {
-                throw new NotImplementedException();
+                return false;
             }
         }
 
@@ -110,13 +95,20 @@ namespace SocialNetwork.Mvc.Providers
         {
             get
             {
-                throw new NotImplementedException();
+                return true;
             }
         }
 
         public override bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            if (ValidateUser(username, oldPassword))
+            {
+                User user = userService.GetUserByEMail(username);
+                user.PasswordHash = Crypto.HashPassword(newPassword);
+                userService.UpdateEntity(user);
+                return true;
+            }
+            return false;
         }
 
         public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer)
@@ -127,6 +119,32 @@ namespace SocialNetwork.Mvc.Providers
         public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
         {
             throw new NotImplementedException();
+        }
+
+        public MembershipUser CreateUser(string email, string password)
+        {
+            MembershipUser membershipUser = GetUser(email, false);
+
+            if (membershipUser != null)
+            {
+                return null;
+            }
+
+            var user = new User
+            {
+                EMail = email,
+                PasswordHash = Crypto.HashPassword(password),
+                //Registration = DateTime.Now
+            };
+            var role = roleService.FindByName("User");
+            if (role != null)
+            {
+                user.RoleId = role.id;
+            }
+
+            userService.CreateEntity(user);
+            membershipUser = GetUser(email, false);
+            return membershipUser;
         }
 
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
@@ -161,7 +179,17 @@ namespace SocialNetwork.Mvc.Providers
 
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
-            throw new NotImplementedException();
+            var user = userService.GetUserByEMail(username);
+
+            if (user == null) return null;
+
+            var memberUser = new MembershipUser("CustomMembershipProvider", user.EMail,
+                null, null, null, null,
+                false, false, DateTime.MinValue,
+                DateTime.MinValue, DateTime.MinValue,
+                DateTime.MinValue, DateTime.MinValue);
+
+            return memberUser;
         }
 
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
