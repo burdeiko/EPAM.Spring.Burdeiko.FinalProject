@@ -35,5 +35,7 @@ namespace SocialNetwork.Dal.Infrastructure
         }
 
         public abstract void Update(T entity);
+
+        public abstract T GetById(int id);
     }
 }

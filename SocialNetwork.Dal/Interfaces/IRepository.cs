@@ -11,5 +11,6 @@ namespace SocialNetwork.Dal.Interfaces
         void Create(T entity);
         void Delete(T entity);
         void Update(T entity);
+        T GetById(int id);
     }
 }

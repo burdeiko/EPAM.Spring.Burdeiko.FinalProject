@@ -12,5 +12,9 @@ namespace SocialNetwork.Dal.Infrastructure
         {
             throw new NotImplementedException();
         }
+        public override Person GetById(int id)
+        {
+            return context.Set<Person>().Find(id);
+        }
     }
 }

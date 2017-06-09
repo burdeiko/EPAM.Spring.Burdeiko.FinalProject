@@ -9,5 +9,6 @@ namespace SocialNetwork.Core.Interfaces
     public interface IRoleService: IService<Role>
     {
         Role FindByName(string name);
+        Role GetRole(int id);
     }
 }

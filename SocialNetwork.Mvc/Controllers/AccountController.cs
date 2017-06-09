@@ -106,5 +106,13 @@ namespace SocialNetwork.Mvc.Controllers
             }
             return View(viewModel);
         }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

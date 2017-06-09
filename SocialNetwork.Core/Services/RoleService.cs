@@ -44,6 +44,11 @@ namespace SocialNetwork.Core.Services
         {
             return roleRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<Dal.ORM.Role, string>(nameof(Dal.ORM.Role.Name), name)).ToBllRole();
         }
+
+        public Role GetRole(int id)
+        {
+            return roleRepository.GetById(id).ToBllRole();
+        }
         #endregion
     }
 }

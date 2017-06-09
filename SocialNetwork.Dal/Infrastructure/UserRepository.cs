@@ -16,5 +16,9 @@ namespace SocialNetwork.Dal.Infrastructure
             user.PersonId = entity.PersonId;
             user.RoleId = entity.RoleId;
         }
+        public override User GetById(int id)
+        {
+            return context.Set<User>().Find(id);
+        }
     }
 }

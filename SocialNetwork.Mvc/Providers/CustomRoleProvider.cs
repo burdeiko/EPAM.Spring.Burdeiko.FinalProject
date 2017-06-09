@@ -47,7 +47,10 @@ namespace SocialNetwork.Mvc.Providers
 
         public override string[] GetRolesForUser(string username)
         {
-            throw new NotImplementedException();
+            var user = userService.GetUserByEMail(username);
+            if (user == null)
+                return null;
+            return new string[1] { roleService.GetRole(user.RoleId).Name };
         }
 
         public override string[] GetUsersInRole(string roleName)
