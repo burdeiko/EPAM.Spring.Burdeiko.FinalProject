@@ -17,8 +17,8 @@ namespace SocialNetwork.Core.Infrastructure
                 //Id = user.Id,
                 E_Mail = user.EMail,
                 RoleId = user.RoleId,
-                PersonId = user.PersonId,
-                PasswordHash = user.PasswordHash
+                PasswordHash = user.PasswordHash,
+                Person = user.Person.ToDalPerson()
             };
         }
 
@@ -30,8 +30,8 @@ namespace SocialNetwork.Core.Infrastructure
                 Id = dalUser.Id,
                 EMail = dalUser.E_Mail,
                 RoleId = dalUser.RoleId,
-                PersonId = dalUser.PersonId,
-                PasswordHash = dalUser.PasswordHash
+                PasswordHash = dalUser.PasswordHash,
+                Person = dalUser.Person.ToBllPerson()
             };
         }
 
@@ -54,6 +54,36 @@ namespace SocialNetwork.Core.Infrastructure
             {
                 id = dalRole.Id,
                 Name = dalRole.Name
+            };
+        }
+
+        public static Person ToBllPerson(this Dal.ORM.Person dalPerson)
+        {
+            if (dalPerson == null)
+                return null;
+            return new Person()
+            {
+                FirstName = dalPerson.FirstName,
+                LastName = dalPerson.LastName,
+                Address = dalPerson.Address,
+                Hobbies = dalPerson.Hobbies,
+                Avatar = dalPerson.Avatar,
+                FavoriteBooks = dalPerson.FavoriteBooks
+            };
+        }
+
+        public static Dal.ORM.Person ToDalPerson(this Person person)
+        {
+            if (person == null)
+                return null;
+            return new Dal.ORM.Person()
+            {
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                Address = person.Address,
+                Hobbies = person.Hobbies,
+                Avatar = person.Avatar,
+                FavoriteBooks = person.FavoriteBooks
             };
         }
     }

@@ -11,7 +11,7 @@ namespace SocialNetwork.Core
         public int Id { get; set; }
         public string EMail { get; set; }
         public int RoleId { get; set; }
-        public int? PersonId { get; set; }
         public string PasswordHash { get; set; }
+        public Person Person { get; set; }
     }
 }

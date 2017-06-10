@@ -9,13 +9,7 @@ namespace SocialNetwork.Dal.ORM
     [Table("Person")]
     public partial class Person
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Person()
-        {
-            Users = new HashSet<User>();
-        }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        
         public int Id { get; set; }
 
         [Required]
@@ -38,7 +32,6 @@ namespace SocialNetwork.Dal.ORM
         [Column(TypeName = "image")]
         public byte[] Avatar { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<User> Users { get; set; }
+        public virtual User User { get; set; }
     }
 }

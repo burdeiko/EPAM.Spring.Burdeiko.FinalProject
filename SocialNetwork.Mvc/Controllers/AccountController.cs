@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using SocialNetwork.Core.Interfaces;
-using SocialNetwork.Core;
-using Ninject;
-using Ninject.Web.Common;
 using SocialNetwork.Mvc.Models;
 using System.Web.Security;
 using SocialNetwork.Mvc.Providers;
@@ -92,7 +85,7 @@ namespace SocialNetwork.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var membershipUser = ((CustomMembershipProvider)Membership.Provider)
-                    .CreateUser(viewModel.Email, viewModel.Password);
+                    .CreateUser(viewModel.Email, viewModel.Password, viewModel.FirstName, viewModel.LastName);
 
                 if (membershipUser != null)
                 {

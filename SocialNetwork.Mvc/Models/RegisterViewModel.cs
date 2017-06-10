@@ -11,6 +11,15 @@ namespace SocialNetwork.Mvc.Models
         [ScaffoldColumn(false)]
         public int Id { get; set; }
 
+        [Display(Name = "Enter your first name")]
+        [Required(ErrorMessage = "The field can not be empty!")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Enter your last name")]
+        [Required(ErrorMessage = "The field can not be empty!")]
+        public string LastName { get; set; }
+
+
         [Display(Name = "Enter your e-mail")]
         [Required(ErrorMessage = "The field can not be empty!")]
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Некорректный email")]

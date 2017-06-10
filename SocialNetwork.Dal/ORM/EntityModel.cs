@@ -22,6 +22,10 @@ namespace SocialNetwork.Dal.ORM
                 .HasMany(e => e.Users)
                 .WithRequired(e => e.Role)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<User>()
+                .HasOptional(e => e.Person)
+                .WithRequired(e => e.User);
         }
     }
 }

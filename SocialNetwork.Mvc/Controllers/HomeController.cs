@@ -10,6 +10,8 @@ namespace SocialNetwork.Mvc.Controllers
     {
         public ActionResult Index()
         {
+            if (Request.IsAuthenticated)
+                return RedirectToRoute("Users", null);
             return View();
         }
 

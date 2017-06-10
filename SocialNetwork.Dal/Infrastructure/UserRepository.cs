@@ -13,7 +13,6 @@ namespace SocialNetwork.Dal.Infrastructure
             User user = context.Set<User>().Find(entity.Id);
             user.E_Mail = entity.E_Mail;
             user.PasswordHash = entity.PasswordHash;
-            user.PersonId = entity.PersonId;
             user.RoleId = entity.RoleId;
         }
         public override User GetById(int id)

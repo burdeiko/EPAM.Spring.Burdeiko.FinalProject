@@ -121,7 +121,7 @@ namespace SocialNetwork.Mvc.Providers
             throw new NotImplementedException();
         }
 
-        public MembershipUser CreateUser(string email, string password)
+        public MembershipUser CreateUser(string email, string password, string firstName, string lastName)
         {
             MembershipUser membershipUser = GetUser(email, false);
 
@@ -141,7 +141,11 @@ namespace SocialNetwork.Mvc.Providers
             {
                 user.RoleId = role.id;
             }
-
+            user.Person = new Person()
+            {
+                FirstName = firstName,
+                LastName = lastName
+            };
             userService.CreateEntity(user);
             membershipUser = GetUser(email, false);
             return membershipUser;

@@ -9,7 +9,6 @@ namespace SocialNetwork.Dal.ORM
     [Table("User")]
     public partial class User
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Column("E-Mail")]
@@ -21,8 +20,6 @@ namespace SocialNetwork.Dal.ORM
         public string PasswordHash { get; set; }
 
         public int RoleId { get; set; }
-
-        public int? PersonId { get; set; }
 
         public virtual Person Person { get; set; }
 
