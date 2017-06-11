@@ -10,7 +10,10 @@ namespace SocialNetwork.Dal.Infrastructure
 
         public override void Update(Person entity)
         {
-            throw new NotImplementedException();
+            var personSet = context.Set<Person>();
+            personSet.Attach(entity);
+            context.Entry(entity).State = EntityState.Modified;
+            context.SaveChanges();
         }
         public override Person GetById(int id)
         {

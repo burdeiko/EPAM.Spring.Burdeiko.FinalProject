@@ -232,6 +232,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\LogoutPartial.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

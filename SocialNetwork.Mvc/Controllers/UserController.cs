@@ -28,12 +28,35 @@ namespace SocialNetwork.Mvc.Controllers
                 person = personService.GetById(id.Value).ToMvcPerson();
                 if (person == null)
                     throw new HttpException(404, "Page not found");
+                ViewBag.Email = userService.GetUser(id.Value).EMail;
             }
             else
             {
+                ViewBag.Email = User.Identity.Name;
                 person = personService.GetById(userService.GetUserByEMail(User.Identity.Name).Id).ToMvcPerson();
+
             }
             return View(person);
+        }
+
+        public ActionResult List()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Edit()
+        {
+            var person = userService.GetUserByEMail(User.Identity.Name).Person;
+
+            return View(person.ToMvcPerson());
+        }
+        [HttpPost]
+        public ActionResult Edit(PersonViewModel model)
+        {
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            personService.UpdateEntity(model.ToBllPerson());
+            return RedirectToAction(nameof(Index));
         }
     }
 }

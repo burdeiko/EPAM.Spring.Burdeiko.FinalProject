@@ -15,6 +15,7 @@ namespace SocialNetwork.Mvc.Infrastructure
                 return null;
             return new PersonViewModel()
             {
+                Id = person.Id,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 Address = person.Address,
@@ -28,6 +29,7 @@ namespace SocialNetwork.Mvc.Infrastructure
                 return null;
             return new Person()
             {
+                Id = person.Id,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 Address = person.Address,

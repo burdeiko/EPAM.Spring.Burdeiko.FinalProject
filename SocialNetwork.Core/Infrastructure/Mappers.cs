@@ -14,7 +14,7 @@ namespace SocialNetwork.Core.Infrastructure
             if (user == null) return null;
             return new Dal.ORM.User()
             {
-                //Id = user.Id,
+                Id = user.Id,
                 E_Mail = user.EMail,
                 RoleId = user.RoleId,
                 PasswordHash = user.PasswordHash,
@@ -63,6 +63,7 @@ namespace SocialNetwork.Core.Infrastructure
                 return null;
             return new Person()
             {
+                Id = dalPerson.Id,
                 FirstName = dalPerson.FirstName,
                 LastName = dalPerson.LastName,
                 Address = dalPerson.Address,
@@ -78,6 +79,7 @@ namespace SocialNetwork.Core.Infrastructure
                 return null;
             return new Dal.ORM.Person()
             {
+                Id = person.Id,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 Address = person.Address,
