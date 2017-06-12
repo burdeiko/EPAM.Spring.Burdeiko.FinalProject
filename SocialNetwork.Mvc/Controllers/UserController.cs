@@ -5,6 +5,7 @@ using System.Web.Security;
 using SocialNetwork.Mvc.Providers;
 using SocialNetwork.Mvc.Infrastructure;
 using System.Web;
+using System.IO;
 
 namespace SocialNetwork.Mvc.Controllers
 {
@@ -19,6 +20,7 @@ namespace SocialNetwork.Mvc.Controllers
         private readonly IUserService userService;
         private readonly IRoleService roleService;
         // GET: User
+        [HttpGet]
         public ActionResult Index(int? id)
         {
             PersonViewModel person;
@@ -55,7 +57,34 @@ namespace SocialNetwork.Mvc.Controllers
         public ActionResult Edit(PersonViewModel model)
         {
             IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            model.Avatar = personService.GetById(model.Id).Avatar;
             personService.UpdateEntity(model.ToBllPerson());
+            return RedirectToAction(nameof(Index));
+        }
+
+        
+        public ActionResult RenderAvatar(int id)
+        {
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            var image = personService.GetById(id).Avatar;
+            if (image == null)
+                return null;
+            return File(image, "image/jpg");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeAvatar()
+        {
+            var file = Request.Files["avatar"];
+            if (file != null)
+            {
+                IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+                var person = userService.GetUserByEMail(User.Identity.Name).Person;
+                byte[] avatar = new byte[file.ContentLength];
+                file.InputStream.Read(avatar, 0, file.ContentLength);
+                person.Avatar = avatar;
+                personService.UpdateEntity(person);
+            }
             return RedirectToAction(nameof(Index));
         }
     }

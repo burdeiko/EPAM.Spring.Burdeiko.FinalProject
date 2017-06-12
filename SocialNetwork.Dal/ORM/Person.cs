@@ -29,7 +29,6 @@ namespace SocialNetwork.Dal.ORM
         [StringLength(50)]
         public string Address { get; set; }
 
-        [Column(TypeName = "image")]
         public byte[] Avatar { get; set; }
 
         public virtual User User { get; set; }

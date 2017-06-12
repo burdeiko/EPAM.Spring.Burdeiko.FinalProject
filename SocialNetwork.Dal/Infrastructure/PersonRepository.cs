@@ -11,9 +11,9 @@ namespace SocialNetwork.Dal.Infrastructure
         public override void Update(Person entity)
         {
             var personSet = context.Set<Person>();
-            personSet.Attach(entity);
-            context.Entry(entity).State = EntityState.Modified;
-            context.SaveChanges();
+            var person = personSet.Find(entity.Id);
+            context.Entry(person).CurrentValues.SetValues(entity);
+            context.Entry(person).State = EntityState.Modified;
         }
         public override Person GetById(int id)
         {

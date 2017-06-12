@@ -20,7 +20,8 @@ namespace SocialNetwork.Mvc.Infrastructure
                 LastName = person.LastName,
                 Address = person.Address,
                 FavoriteBooks = person.FavoriteBooks,
-                Hobbies = person.Hobbies
+                Hobbies = person.Hobbies,
+                Avatar = person.Avatar
             };
         }
         public static Person ToBllPerson(this PersonViewModel person)
@@ -34,7 +35,8 @@ namespace SocialNetwork.Mvc.Infrastructure
                 LastName = person.LastName,
                 Address = person.Address,
                 FavoriteBooks = person.FavoriteBooks,
-                Hobbies = person.Hobbies
+                Hobbies = person.Hobbies,
+                Avatar = person.Avatar
             };
         }
     }

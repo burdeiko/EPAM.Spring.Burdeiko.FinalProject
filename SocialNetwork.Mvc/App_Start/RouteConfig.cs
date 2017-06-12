@@ -14,15 +14,10 @@ namespace SocialNetwork.Mvc
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "EditProfile",
-                url: "User/Edit",
-                defaults: new { controller = "User", action = "Edit" }
-            );
-
-            routes.MapRoute(
                 name: "Users",
                 url: "User/{id}",
-                defaults: new { controller = "User", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "User", action = "Index", id = UrlParameter.Optional },
+                constraints: new { id = @"\d*" }
             );
 
             routes.MapRoute(

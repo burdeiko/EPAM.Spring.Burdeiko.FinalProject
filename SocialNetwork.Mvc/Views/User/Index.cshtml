@@ -4,10 +4,15 @@
 }
 <div class="container">
     <div class="col-md-3">
-        *AVATAR*
+        <img src="@Url.Action(nameof(SocialNetwork.Mvc.Controllers.UserController.RenderAvatar), new { id = Model.Id })" alt="Avatar" class="img-responsive avatar"/>
+        @if (User.Identity.Name == ViewBag.Email)
+        {
+            @Html.Partial("ChangeAvatar");
+        }
+        <br />
     </div>
     <div class="col-md-9">
-        <div class="row"">
+        <div class="row">
             <h3>
                 @Html.DisplayFor(m => m.FirstName)
                 @Html.DisplayFor(m => m.LastName)

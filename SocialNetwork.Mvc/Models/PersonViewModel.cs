@@ -17,5 +17,6 @@ namespace SocialNetwork.Mvc.Models
         public string FavoriteBooks { get; set; }
 
         public string Address { get; set; }
+        public byte[] Avatar { get; set; }
     }
 }

@@ -1,0 +1,14 @@
+﻿<a data-toggle="modal" data-target="#ChangeAvatar"><h5>change avatar</h5> </a>
+<div class="modal fade" id="ChangeAvatar" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @using (Html.BeginForm("ChangeAvatar", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input type="file" name="avatar" />
+                    <input type="submit" value="Save" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
