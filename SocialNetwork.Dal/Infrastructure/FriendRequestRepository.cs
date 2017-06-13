@@ -17,13 +17,13 @@ namespace SocialNetwork.Dal.Infrastructure
 
         public FriendRequest GetById(int senderId, int receiverId)
         {
-            return context.Set<FriendRequest>().Find(new { SenderId = senderId, ReceiverId = receiverId });
+            return context.Set<FriendRequest>().Find(senderId, receiverId );
         }
 
         public override void Update(FriendRequest entity)
         {
             var requestSet = context.Set<FriendRequest>();
-            var request = requestSet.Find(new { SenderId = entity.SenderId, ReceiverId = entity.ReceiverId });
+            var request = requestSet.Find(entity.SenderId, entity.ReceiverId);
             context.Entry(request).CurrentValues.SetValues(entity);
             context.Entry(request).State = EntityState.Modified;
         }

@@ -31,12 +31,31 @@ namespace SocialNetwork.Mvc.Controllers
             return View("Index", personService.GetFriendRequestSenders(id).Select(m => m.ToMvcPerson()));
         }
 
+        public ActionResult OutcomingRequests()
+        {
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            IUserService userService = System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>();
+            int id = userService.GetUserByEMail(User.Identity.Name).Id;
+            return View("Index", personService.GetFriendRequestReceivers(id).Select(m => m.ToMvcPerson()));
+        }
+
         public ActionResult SendFriendRequest(int? receiverId, string returnUrl)
         {
             IUserService userService = System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>();
             IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
             int senderId = userService.GetUserByEMail(User.Identity.Name).Id;
             personService.SendFriendRequest(senderId, receiverId.Value);
+            if (returnUrl == null)
+                return RedirectToAction("Index", "Home");
+            return Redirect(returnUrl);
+        }
+
+        public ActionResult AcceptFriendRequest(int? senderId, string returnUrl)
+        {
+            IUserService userService = System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>();
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            int receiverId = userService.GetUserByEMail(User.Identity.Name).Id;
+            personService.AcceptFriendRequest(senderId.Value, receiverId);
             if (returnUrl == null)
                 return RedirectToAction("Index", "Home");
             return Redirect(returnUrl);

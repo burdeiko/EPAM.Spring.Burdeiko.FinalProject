@@ -12,8 +12,9 @@ namespace SocialNetwork.Core.Interfaces
         Person GetById(int id);
 
         IEnumerable<Person> GetFriendRequestSenders(int personId);
-        IEnumerable<Person> GetFriendRequestsReceivers(int personId);
+        IEnumerable<Person> GetFriendRequestReceivers(int personId);
         IEnumerable<Person> GetFriends(int personId);
         void SendFriendRequest(int senderId, int receiverId);
+        void AcceptFriendRequest(int senderId, int receiverId);
     }
 }

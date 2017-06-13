@@ -61,7 +61,7 @@ namespace SocialNetwork.Core.Services
             return requests.Where(m => m.IsConfirmed == false).Select(m => m.Sender.ToBllPerson());
         }
 
-        public IEnumerable<Person> GetFriendRequestsReceivers(int personId)
+        public IEnumerable<Person> GetFriendRequestReceivers(int personId)
         {
             var requests = friendRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<FriendRequest, int>(nameof(FriendRequest.SenderId), personId));
             return requests.Where(m => m.IsConfirmed == false).Select(m => m.Receiver.ToBllPerson());
@@ -79,6 +79,16 @@ namespace SocialNetwork.Core.Services
         public void SendFriendRequest(int senderId, int receiverId)
         {
             friendRepository.Create(new FriendRequest { SenderId = senderId, ReceiverId = receiverId });
+            uow.Commit();
+        }
+
+        public void AcceptFriendRequest(int senderId, int receiverId)
+        {
+            var request = friendRepository.GetById(senderId, receiverId);
+            //if (request == null)
+            //    throw new ArgumentException();
+            request.IsConfirmed = true;
+            friendRepository.Update(request);
             uow.Commit();
         }
 

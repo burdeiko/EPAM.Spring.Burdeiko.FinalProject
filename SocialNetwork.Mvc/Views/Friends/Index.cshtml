@@ -7,8 +7,9 @@
 
 <div class="container">
     <ul class="nav nav-tabs">
-        <li class="active">@Html.ActionLink("MyFriends", "Index", "Friends")</li>
+        <li>@Html.ActionLink("MyFriends", "Index", "Friends")</li>
         <li>@Html.ActionLink("Incoming Requests", "IncomingRequests", "Friends")</li>
+        <li>@Html.ActionLink("Outgoing Requests", "OutcomingRequests", "Friends")</li>
     </ul>
     @foreach(var item in Model)
     {
