@@ -42,7 +42,7 @@ namespace SocialNetwork.Core.Services
 
         public Role FindByName(string name)
         {
-            return roleRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<Dal.ORM.Role, string>(nameof(Dal.ORM.Role.Name), name)).ToBllRole();
+            return roleRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<Dal.ORM.Role, string>(nameof(Dal.ORM.Role.Name), name)).First().ToBllRole();
         }
 
         public Role GetRole(int id)

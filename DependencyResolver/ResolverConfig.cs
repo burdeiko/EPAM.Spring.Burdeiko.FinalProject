@@ -21,6 +21,7 @@ namespace DependencyResolver
             kernel.Bind<IRepository<Person>>().To<PersonRepository>();
             kernel.Bind<IRoleService>().To<RoleService>();
             kernel.Bind<IPersonService>().To<PersonService>();
+            kernel.Bind<IFriendRequestRepository>().To<FriendRequestRepository>();
         }
 
         public static void ConfigurateForConsole(this IKernel kernel)

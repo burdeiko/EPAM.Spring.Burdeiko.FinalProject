@@ -23,16 +23,11 @@ namespace SocialNetwork.Core.Services
 
         public User GetUser(int id)
         {
-            ParameterExpression parameterExp = Expression.Parameter(typeof(Dal.ORM.User));
-            MemberExpression parameterId = Expression.Property(parameterExp, typeof(Dal.ORM.User).GetProperty("Id"));
-            ConstantExpression idToSearch = Expression.Constant(id, typeof(int));
-            BinaryExpression equalityExp = Expression.Equal(parameterId, idToSearch);
-            Expression<Func<Dal.ORM.User, bool>> predicateExpression = Expression.Lambda<Func<Dal.ORM.User, bool>>(equalityExp, parameterExp);
-            return userRepository.GetByPredicate(predicateExpression).ToBllUser();
+            return userRepository.GetById(id).ToBllUser();
         }
         public User GetUserByEMail(string eMail)
         {
-            return userRepository.GetByPredicate(ByEMail(eMail)).ToBllUser();
+            return userRepository.GetByPredicate(ByEMail(eMail)).First().ToBllUser();
         }
         public void DeleteEntity(User user)
         {

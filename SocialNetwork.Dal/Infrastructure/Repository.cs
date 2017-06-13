@@ -29,9 +29,9 @@ namespace SocialNetwork.Dal.Infrastructure
         {
             return context.Set<T>().AsEnumerable();
         }
-        public T GetByPredicate(Expression<Func<T, bool>> predicate)
+        public IEnumerable<T> GetByPredicate(Expression<Func<T, bool>> predicate)
         {
-            return context.Set<T>().FirstOrDefault(predicate);
+            return context.Set<T>().Where(predicate);
         }
 
         public abstract void Update(T entity);

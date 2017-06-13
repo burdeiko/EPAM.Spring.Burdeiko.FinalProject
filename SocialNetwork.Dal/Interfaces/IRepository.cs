@@ -7,7 +7,7 @@ namespace SocialNetwork.Dal.Interfaces
     public interface IRepository<T>
     {
         IEnumerable<T> GetAll();
-        T GetByPredicate(Expression<Func<T, bool>> predicate);
+        IEnumerable<T> GetByPredicate(Expression<Func<T, bool>> predicate);
         void Create(T entity);
         void Delete(T entity);
         void Update(T entity);

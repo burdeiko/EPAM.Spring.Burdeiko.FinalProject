@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SocialNetwork.Core.Infrastructure;
 using SocialNetwork.Dal.Interfaces;
+using SocialNetwork.Dal.ORM;
 using SocialNetwork.Core.Interfaces;
 using System.Linq.Expressions;
 
@@ -14,10 +15,12 @@ namespace SocialNetwork.Core.Services
     {
         private readonly IUnitOfWork uow;
         private readonly IRepository<Dal.ORM.Person> personRepository;
-        public PersonService(IUnitOfWork uow, IRepository<Dal.ORM.Person> repository)
+        private readonly IFriendRequestRepository friendRepository;
+        public PersonService(IUnitOfWork uow, IRepository<Dal.ORM.Person> repository, IFriendRequestRepository friendRepository)
         {
             this.uow = uow;
             this.personRepository = repository;
+            this.friendRepository = friendRepository;
         }
 
         #region Public Methods
@@ -41,15 +44,42 @@ namespace SocialNetwork.Core.Services
             uow.Commit();
         }
 
-        public Person FindByFirstName(string firstName)
+        public IEnumerable<Person> FindByFirstName(string firstName)
         {
             var searchExpression = SearchExpressionBuilder.ByProperty<Dal.ORM.Person, string>(nameof(Dal.ORM.Person.FirstName), firstName);
-            return personRepository.GetByPredicate(searchExpression).ToBllPerson();
+            return personRepository.GetByPredicate(searchExpression).Select(m => m.ToBllPerson());
         }
 
         public Person GetById(int id)
         {
             return personRepository.GetById(id).ToBllPerson();
+        }
+
+        public IEnumerable<Person> GetFriendRequestSenders(int personId)
+        {
+            var requests = friendRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<FriendRequest, int>(nameof(FriendRequest.ReceiverId), personId));
+            return requests.Where(m => m.IsConfirmed == false).Select(m => m.Sender.ToBllPerson());
+        }
+
+        public IEnumerable<Person> GetFriendRequestsReceivers(int personId)
+        {
+            var requests = friendRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<FriendRequest, int>(nameof(FriendRequest.SenderId), personId));
+            return requests.Where(m => m.IsConfirmed == false).Select(m => m.Receiver.ToBllPerson());
+        }
+
+        public IEnumerable<Person> GetFriends(int personId)
+        {
+            var outcomingRequests = friendRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<FriendRequest, int>(nameof(FriendRequest.SenderId), personId)).Where(m => m.IsConfirmed == true);
+            var result = outcomingRequests.Select(m => m.Receiver);
+            var incomingRequests = friendRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<FriendRequest, int>(nameof(FriendRequest.ReceiverId), personId)).Where(m => m.IsConfirmed == true);
+            result = result.Union(incomingRequests.Select(m => m.Sender));
+            return result.Select(m => m.ToBllPerson());
+        }
+
+        public void SendFriendRequest(int senderId, int receiverId)
+        {
+            friendRepository.Create(new FriendRequest { SenderId = senderId, ReceiverId = receiverId });
+            uow.Commit();
         }
 
 

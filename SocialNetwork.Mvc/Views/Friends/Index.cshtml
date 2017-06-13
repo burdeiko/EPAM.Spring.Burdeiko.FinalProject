@@ -1,0 +1,18 @@
+﻿@model IEnumerable<SocialNetwork.Mvc.Models.PersonViewModel>
+
+@{
+    ViewBag.Title = "Friends";
+}
+
+
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li class="active">@Html.ActionLink("MyFriends", "Index", "Friends")</li>
+        <li>@Html.ActionLink("Incoming Requests", "IncomingRequests", "Friends")</li>
+    </ul>
+    @foreach(var item in Model)
+    {
+        @Html.Partial("FriendPartial", item)
+    }
+</div>
+

@@ -1,0 +1,10 @@
+﻿@model SocialNetwork.Mvc.Models.PersonViewModel
+
+<div class="row">
+    <div class="col-sm-3">
+        <img src="@Url.Action("RenderAvatar", "User", new { id = Model.Id })" alt="Avatar" , class="img-responsive" />
+    </div>
+    <div class="col-sm-9">
+        <a href="@Url.Action("Index", "User", new { id = Model.Id })">@Model.FirstName @Model.LastName</a>
+    </div>
+</div>

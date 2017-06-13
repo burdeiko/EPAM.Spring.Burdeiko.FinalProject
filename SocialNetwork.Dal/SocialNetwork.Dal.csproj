@@ -51,14 +51,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\FriendRequestRepository.cs" />
     <Compile Include="Infrastructure\PersonRepository.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\RoleRepository.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Infrastructure\UserRepository.cs" />
+    <Compile Include="Interfaces\IFriendRequestRepository.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="ORM\EntityModel.cs" />
+    <Compile Include="ORM\FriendRequest.cs" />
     <Compile Include="ORM\Person.cs" />
     <Compile Include="ORM\Role.cs" />
     <Compile Include="ORM\User.cs" />
