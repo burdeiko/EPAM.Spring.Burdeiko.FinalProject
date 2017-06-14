@@ -1,0 +1,5 @@
+﻿@model IEnumerable<SocialNetwork.Mvc.Models.PersonViewModel>
+@foreach (var item in Model)
+{
+    @Html.Partial("UserPartial", item)
+}

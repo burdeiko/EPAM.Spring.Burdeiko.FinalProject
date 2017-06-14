@@ -286,7 +286,12 @@
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\ChangeAvatar.cshtml" />
     <Content Include="Views\Friends\Index.cshtml" />
-    <Content Include="Views\Friends\FriendPartial.cshtml" />
+    <Content Include="Views\Shared\UserPartial.cshtml" />
+    <Content Include="Views\User\Search.cshtml" />
+    <Content Include="Views\User\AddFriendPartial.cshtml" />
+    <Content Include="Views\User\AcceptFriendRequest.cshtml" />
+    <Content Include="Views\User\RequestSendedPartial.cshtml" />
+    <Content Include="Views\User\SearchResults.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

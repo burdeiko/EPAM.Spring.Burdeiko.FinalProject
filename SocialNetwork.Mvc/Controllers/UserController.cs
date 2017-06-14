@@ -6,6 +6,7 @@ using SocialNetwork.Mvc.Providers;
 using SocialNetwork.Mvc.Infrastructure;
 using System.Web;
 using System.IO;
+using System.Linq;
 
 namespace SocialNetwork.Mvc.Controllers
 {
@@ -86,6 +87,53 @@ namespace SocialNetwork.Mvc.Controllers
                 personService.UpdateEntity(person);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public ActionResult Search()
+        {
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            return View(personService.GetAllEntities().Select(m => m.ToMvcPerson()));
+        }
+
+        [HttpPost]
+        public ActionResult Search(string searchString)
+        {
+
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            var result = personService.FindByFirstName(searchString).Union(personService.FindByLastName(searchString)).Select(m => m.ToMvcPerson());
+            if (searchString == null)
+                result = personService.GetAllEntities().Select(m => m.ToMvcPerson());
+            if (Request.IsAjaxRequest())
+                return PartialView("SearchResults", result);
+            else return View(result);
+        }
+
+        [ChildActionOnly]
+        public ActionResult GetFriendRequestButton(int personId)
+        {
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            int currentPersonId = userService.GetUserByEMail(User.Identity.Name).Id;
+            if (HasRequestedFriendShip(personId, currentPersonId))
+                return PartialView("AcceptFriendRequest", personId);
+            else if (HasRequestedFriendShip(currentPersonId, personId))
+                return PartialView("RequestSendedPartial");
+            else if (!AreFriends(personId, currentPersonId) && personId != currentPersonId)
+                return PartialView("AddFriendPartial", personId);
+            return null;
+        }
+
+
+        private bool AreFriends(int person1Id, int person2Id)
+        {
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            return personService.GetFriends(person1Id).Select(m => m.Id).Contains(person2Id);
+        }
+
+        private bool HasRequestedFriendShip(int senderId, int receiverId)
+        {
+            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            return personService.GetFriendRequestReceivers(senderId).Select(m => m.Id).Contains(receiverId);
         }
     }
 }

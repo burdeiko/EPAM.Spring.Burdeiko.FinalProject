@@ -9,6 +9,7 @@ namespace SocialNetwork.Core.Interfaces
     public interface IPersonService: IService<Person>
     {
         IEnumerable<Person> FindByFirstName(string firstName);
+        IEnumerable<Person> FindByLastName(string lastName);
         Person GetById(int id);
 
         IEnumerable<Person> GetFriendRequestSenders(int personId);

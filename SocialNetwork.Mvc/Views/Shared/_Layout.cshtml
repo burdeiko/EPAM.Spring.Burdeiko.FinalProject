@@ -24,6 +24,7 @@
                     @if (Request.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("My Friends", "Index", "Friends")</li>
+                        <li>@Html.ActionLink("Search", "Search", "User")</li>
                     }
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
@@ -37,7 +38,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2016 - @DateTime.Now.Year - Social Network</p>
+            <p>&copy; 2017 - @DateTime.Now.Year - Social Network</p>
         </footer>
     </div>
 

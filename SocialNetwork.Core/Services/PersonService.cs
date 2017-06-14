@@ -92,7 +92,11 @@ namespace SocialNetwork.Core.Services
             uow.Commit();
         }
 
-
+        public IEnumerable<Person> FindByLastName(string lastName)
+        {
+            var searchExpression = SearchExpressionBuilder.ByProperty<Dal.ORM.Person, string>(nameof(Dal.ORM.Person.FirstName), lastName);
+            return personRepository.GetByPredicate(searchExpression).Select(m => m.ToBllPerson());
+        }
         #endregion
     }
 }

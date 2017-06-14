@@ -11,7 +11,7 @@
         }
         else
         {
-            @Html.ActionLink("Add Friend", "SendFriendRequest", "Friends", new { receiverId = Model.Id, returnUrl = Request.RawUrl}, new {Class = "btn btn-default"})
+            @Html.Action("GetFriendRequestButton", new { personId = Model.Id })
         }
         <br />
     </div>
@@ -22,7 +22,7 @@
                 @Html.DisplayFor(m => m.LastName)
                 @if (User.Identity.Name == ViewBag.Email)
                 {
-                    <sup>@Html.ActionLink("edit information", "Edit", "User")</sup>
+                    <small>@Html.ActionLink("edit information", "Edit", "User")</small>
                 }
             </h3>
             <hr />
