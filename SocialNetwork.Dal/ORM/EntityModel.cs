@@ -16,6 +16,7 @@ namespace SocialNetwork.Dal.ORM
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -27,6 +28,18 @@ namespace SocialNetwork.Dal.ORM
 
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.ReceivedRequests)
+                .WithRequired(e => e.Sender)
+                .HasForeignKey(e => e.SenderId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Person>()
+       .HasMany(e => e.SendedMessages)
+       .WithRequired(e => e.Receiver)
+       .HasForeignKey(e => e.ReceiverId)
+       .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Person>()
+                .HasMany(e => e.ReceivedMessages)
                 .WithRequired(e => e.Sender)
                 .HasForeignKey(e => e.SenderId)
                 .WillCascadeOnDelete(false);

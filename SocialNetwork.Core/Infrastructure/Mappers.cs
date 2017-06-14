@@ -88,5 +88,33 @@ namespace SocialNetwork.Core.Infrastructure
                 FavoriteBooks = person.FavoriteBooks
             };
         }
+
+        public static Dal.ORM.Message ToDalMessage(this Message message)
+        {
+            if (message == null)
+                return null;
+            return new Dal.ORM.Message()
+            {
+                Id = message.Id,
+                ReceiverId = message.ToId,
+                SenderId = message.FromId,
+                Date = message.Time,
+                MessageString = message.MessageString
+            };
+        }
+
+        public static Message ToBllMessage(this Dal.ORM.Message message)
+        {
+            if (message == null)
+                return null;
+            return new Message()
+            {
+                Id = message.Id,
+                ToId = message.ReceiverId,
+                FromId = message.SenderId,
+                Time = message.Date,
+                MessageString = message.MessageString
+            };
+        }
     }
 }
