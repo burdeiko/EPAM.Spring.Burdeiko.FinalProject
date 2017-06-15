@@ -8,10 +8,12 @@ namespace SocialNetwork.Core.Interfaces
 {
     public interface IMessageService
     {
-        void SendMessage(int senderId, int receiverId, string message);
+        Message SendMessage(int senderId, int receiverId, string message);
 
         IEnumerable<Message> GetDialogueWith(int currentId, int otherId);
 
         IEnumerable<Message> GetDialoguesPreview(int forPersonId);
+
+        IEnumerable<int> GetTalkersIds(int forPersonId);
     }
 }

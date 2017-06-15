@@ -2,7 +2,9 @@
 
 <div class="row">
     <div class="col-sm-3">
-        <img src="@Url.Action("RenderAvatar", "User", new { id = Model.Id })" alt="Avatar" , class="img-responsive"/>
+        <div class="avatar-container">
+        <img src="@Url.Action("RenderAvatar", "User", new { id = Model.Id })" alt="Avatar" , class="avatar img-circle"/>
+            </div>
         @Html.Action("GetFriendRequestButton", "User", new { personId = Model.Id })
     </div>
     <div class="col-sm-9">

@@ -36,7 +36,21 @@ textarea {
 }
 
 .avatar {
-    margin-top: 25px;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left:0;
+    bottom:0;
+    right:0;
+}
+.avatar-container {
+   position: relative;
+   width: 100%;
+   padding-top: 100%;
 }
 
-
+.message-header {
+    font-weight: bolder;
+    color: darkslateblue;
+}

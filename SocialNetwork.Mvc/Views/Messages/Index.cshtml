@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SocialNetwork.Mvc.Models.MessageViewModel>
+﻿@model IEnumerable<SocialNetwork.Mvc.Models.DialogueViewModel>
 
 @{
     ViewBag.Title = "Messages";
@@ -6,9 +6,9 @@
 
 <div class="container">
     <div class="col-sm-3">
-        @foreach (var message in Model)
+        @foreach (var dialogue in Model)
         {
-            @Ajax.ActionLink(message.SenderName, "Dialogue",new { withId = message.SenderId}, new AjaxOptions { UpdateTargetId = "dialogue-container"})
+            @Html.Partial("DialoguePreview", dialogue)
             <hr />
         }
     </div>

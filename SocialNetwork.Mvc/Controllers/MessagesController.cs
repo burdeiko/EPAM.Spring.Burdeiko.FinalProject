@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace SocialNetwork.Mvc.Controllers
 {
+    [Authorize]
     public class MessagesController : Controller
     {
 
@@ -29,14 +30,34 @@ namespace SocialNetwork.Mvc.Controllers
         // GET: Messages
         public ActionResult Index()
         {
-            var dialoguesPreview = messageService.GetDialoguesPreview(currentUserId).Select(m => m.ToMvcMessage());
-            return View(dialoguesPreview);
+            var hasDialoguesWithIds = messageService.GetTalkersIds(currentUserId);
+            var personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
+            var hasDialoguesWith = hasDialoguesWithIds.Select(m => personService.GetById(m));
+            var model = new List<DialogueViewModel>();
+            foreach (var person in hasDialoguesWith)
+            {
+                model.Add(new DialogueViewModel {
+                    WithPersonId = person.Id,
+                    WithPersonName = person.FirstName + person.LastName,
+                    Messages = messageService.GetDialogueWith(currentUserId, person.Id).Select(m => m.ToMvcMessage())
+                });
+            }
+            return View(model);
         }
 
         public ActionResult Dialogue(int withId)
         {
-            var dialogue = messageService.GetDialogueWith(currentUserId, withId).Select(m => m.ToMvcMessage());
+            var dialogue = new DialogueViewModel { Messages = messageService.GetDialogueWith(currentUserId, withId).Select(m => m.ToMvcMessage()), WithPersonId = withId };
             return PartialView("DialoguePartial", dialogue);
+        }
+
+        [HttpPost]
+        public ActionResult SendMessage(string message, int? toId)
+        {
+            if (!toId.HasValue || message == null)
+                return null;
+            var messageViewModel = messageService.SendMessage(currentUserId, toId.Value, message).ToMvcMessage();
+            return PartialView("MessagePartial", messageViewModel);
         }
     }
 }

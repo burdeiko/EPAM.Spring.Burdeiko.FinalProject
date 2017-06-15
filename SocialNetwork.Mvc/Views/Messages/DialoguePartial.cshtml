@@ -1,18 +1,21 @@
-﻿@model IEnumerable<SocialNetwork.Mvc.Models.MessageViewModel>
+﻿@model SocialNetwork.Mvc.Models.DialogueViewModel
 
-@foreach (var message in Model)
+@foreach (var message in Model.Messages)
 {
-    <div class="row">
-        <div class="col-sm-1">
-            <img src="@Url.Action("RenderAvatar", "User", new { id = message.SenderId })" alt="avatar" class="img-circle img-responsive" />
-        </div>
-        <div class="col-sm-11">
-            <div class="row">
-                @message.SenderName
-            </div>
-            <div class="row">
-                @message.Message
-            </div>
-        </div>
-    </div>
+    @Html.Partial("MessagePartial", message)
 }
+<div id="new-message-container">
+
+</div>
+<div class="row">
+    @using (Ajax.BeginForm("SendMessage", new AjaxOptions { UpdateTargetId = "new-message-container", InsertionMode = InsertionMode.InsertAfter, OnSuccess = "OnSuccess" }))
+    {
+        <div class="col-xs-11">
+            @Html.TextArea("message")
+            @Html.Hidden("toId", Model.WithPersonId)
+        </div>
+        <div class="col-xs-1">
+            <input type="submit" class="btn btn-default" value="send"/>
+        </div>
+    }
+</div>

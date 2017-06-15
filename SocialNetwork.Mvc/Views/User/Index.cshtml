@@ -4,7 +4,9 @@
 }
 <div class="container">
     <div class="col-md-3">
-        <img src="@Url.Action(nameof(SocialNetwork.Mvc.Controllers.UserController.RenderAvatar), new { id = Model.Id })" alt="Avatar" class="img-responsive avatar"/>
+        <div class="avatar-container">
+        <img src="@Url.Action(nameof(SocialNetwork.Mvc.Controllers.UserController.RenderAvatar), new { id = Model.Id })" alt="Avatar" class="avatar"/>
+            </div>
         @if (User.Identity.Name == ViewBag.Email)
         {
             @Html.Partial("ChangeAvatar");
