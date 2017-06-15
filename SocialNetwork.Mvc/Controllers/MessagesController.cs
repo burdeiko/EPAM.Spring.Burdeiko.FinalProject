@@ -29,8 +29,14 @@ namespace SocialNetwork.Mvc.Controllers
         // GET: Messages
         public ActionResult Index()
         {
-            
-            return View();
+            var dialoguesPreview = messageService.GetDialoguesPreview(currentUserId).Select(m => m.ToMvcMessage());
+            return View(dialoguesPreview);
+        }
+
+        public ActionResult Dialogue(int withId)
+        {
+            var dialogue = messageService.GetDialogueWith(currentUserId, withId).Select(m => m.ToMvcMessage());
+            return PartialView("DialoguePartial", dialogue);
         }
     }
 }

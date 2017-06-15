@@ -31,5 +31,34 @@ namespace SocialNetwork.Core.Services
         {
             messageRepository.Create(new Message { FromId = senderId, ToId = receiverId, MessageString = message, Time = DateTime.Now }.ToDalMessage());
         }
+
+        public IEnumerable<Message> GetDialoguesPreview(int forPersonId)
+        {
+            var sendedMessages = messageRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<SocialNetwork.Dal.ORM.Message, int>(nameof(Dal.ORM.Message.SenderId), forPersonId)).Select(m => m.ToBllMessage());
+            var receivedMessages = messageRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<SocialNetwork.Dal.ORM.Message, int>(nameof(Dal.ORM.Message.ReceiverId), forPersonId)).Select(m => m.ToBllMessage());
+            sendedMessages = sendedMessages.OrderBy(m => m.ToId).ThenBy(m => m.Time).Reverse();
+            List<Message> previewSendedMessages = new List<Message>();
+            int lastTalkerId = -1;
+            foreach (var message in sendedMessages)
+            {
+                if (message.ToId != lastTalkerId)
+                {
+                    lastTalkerId = message.ToId;
+                    previewSendedMessages.Add(message);
+                }
+            }
+            lastTalkerId = -1;
+            List<Message> previewReceivedMessages = new List<Message>();
+            foreach (var message in receivedMessages)
+            {
+                if (message.FromId != lastTalkerId)
+                {
+                    lastTalkerId = message.FromId;
+                    previewReceivedMessages.Add(message);
+                }
+            }
+            var previewMessages = previewSendedMessages.Join(previewReceivedMessages, m => m.ToId, m => m.FromId, (m1, m2) => m1.Time > m2.Time ? m1 : m2).Union(sendedMessages.Where(m => !receivedMessages.Select(mod => mod.FromId).Contains(m.ToId))).Union(receivedMessages.Where(m => !sendedMessages.Select(mod => mod.ToId).Contains(m.FromId)));
+            return previewMessages;
+        }
     }
 }

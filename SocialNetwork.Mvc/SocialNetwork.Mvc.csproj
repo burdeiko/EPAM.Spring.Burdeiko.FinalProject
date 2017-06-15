@@ -181,6 +181,7 @@
     <Compile Include="Infrastructure\DependencyResolver.cs" />
     <Compile Include="Infrastructure\Mappers.cs" />
     <Compile Include="Models\LogOnViewModel.cs" />
+    <Compile Include="Models\MessageViewModel.cs" />
     <Compile Include="Models\PersonViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -293,10 +294,10 @@
     <Content Include="Views\User\AcceptFriendRequest.cshtml" />
     <Content Include="Views\User\RequestSendedPartial.cshtml" />
     <Content Include="Views\User\SearchResults.cshtml" />
+    <Content Include="Views\Messages\Index.cshtml" />
+    <Content Include="Views\Messages\DialoguePartial.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Messages\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

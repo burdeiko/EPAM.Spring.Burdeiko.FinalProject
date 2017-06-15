@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SocialNetwork.Core
 {
-    public class Person: IEquatable<Person>
+    public class Person
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -20,19 +20,5 @@ namespace SocialNetwork.Core
         public string Address { get; set; }
 
         public byte[] Avatar { get; set; }
-
-        public bool Equals(Person other)
-        {
-            if (other == null)
-                return false;
-            if (Id == other.Id && FirstName == other.FirstName && LastName == other.LastName)
-                return true;
-            return false;
-        }
-        public override bool Equals(object obj)
-        {
-            var other = obj as Person;
-            return Equals(other);
-        }
     }
 }

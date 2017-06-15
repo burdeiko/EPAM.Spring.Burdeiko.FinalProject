@@ -1,0 +1,18 @@
+﻿@model IEnumerable<SocialNetwork.Mvc.Models.MessageViewModel>
+
+@foreach (var message in Model)
+{
+    <div class="row">
+        <div class="col-sm-1">
+            <img src="@Url.Action("RenderAvatar", "User", new { id = message.SenderId })" alt="avatar" class="img-circle img-responsive" />
+        </div>
+        <div class="col-sm-11">
+            <div class="row">
+                @message.SenderName
+            </div>
+            <div class="row">
+                @message.Message
+            </div>
+        </div>
+    </div>
+}
