@@ -1,21 +1,37 @@
 ﻿@model SocialNetwork.Mvc.Models.DialogueViewModel
 
-@foreach (var message in Model.Messages)
-{
-    @Html.Partial("MessagePartial", message)
-}
-<div id="new-message-container">
-
-</div>
-<div class="row">
-    @using (Ajax.BeginForm("SendMessage", new AjaxOptions { UpdateTargetId = "new-message-container", InsertionMode = InsertionMode.InsertAfter, OnSuccess = "OnSuccess" }))
+<div class="col-sm-11" id="message-container">
+    @foreach (var message in Model.Messages)
     {
-        <div class="col-xs-11">
-            @Html.TextArea("message")
+        @Html.Partial("MessagePartial", message)
+    }
+</div>
+
+<div class="row">
+   
+    @using (Ajax.BeginForm("SendMessage", new { }, new AjaxOptions { UpdateTargetId = "message-container", InsertionMode = InsertionMode.InsertAfter, OnSuccess = "ScrollToBottom" }, new { id = "message-form"}))
+    {
+        <div class="col-xs-10">
+            <div class="form-group">
+            <textarea class="form-control" rows="3" name="message" id="message" onkeydown="SendMessage(event)"></textarea>
+            </div>
             @Html.Hidden("toId", Model.WithPersonId)
         </div>
+
         <div class="col-xs-1">
-            <input type="submit" class="btn btn-default" value="send"/>
+            <input type="submit" class="btn btn-default" value="send" id="submit-button"/>
         </div>
     }
+    <script type="text/javascript">
+            function ScrollToBottom() {
+                document.getElementById('message-container').scrollTop = document.getElementById('message-container').scrollHeight;
+                document.getElementById('message').value = '';
+            }
+
+            function SendMessage(event) {
+                if (event.keyCode === 13) {
+                    document.getElementById('submit-button').click();
+                }
+            }
+    </script>
 </div>

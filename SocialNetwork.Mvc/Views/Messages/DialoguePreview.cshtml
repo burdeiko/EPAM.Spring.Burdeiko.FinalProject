@@ -7,6 +7,11 @@
         </div>
     </div>
     <div class="col-xs-7">
-        @Ajax.ActionLink(Model.WithPersonName, "Dialogue", new { withId = Model.WithPersonId }, new AjaxOptions { UpdateTargetId = "dialogue-container" })
+        @Ajax.ActionLink(Model.WithPersonName, "Dialogue", new { withId = Model.WithPersonId }, new AjaxOptions { UpdateTargetId = "dialogue-container", OnSuccess = "ScrollToBottom" })
     </div>
+    <script type="text/javascript">
+        function ScrollToBottom() {
+            document.getElementById('message-container').scrollTop = document.getElementById('message-container').scrollHeight;
+        }
+    </script>
 </div>
