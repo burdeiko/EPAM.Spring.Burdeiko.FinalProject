@@ -1,17 +1,12 @@
-﻿@model IEnumerable<SocialNetwork.Mvc.Models.PersonViewModel>
+﻿@model SocialNetwork.Mvc.Models.PagedList<SocialNetwork.Mvc.Models.PersonViewModel>
 @{
     ViewBag.Title = "Search";
 }
 
-@using (Ajax.BeginForm("Search", "User", new AjaxOptions { UpdateTargetId = "SearchResults" }))
-{
-    @Html.TextBox("searchString")
-    <input type="submit" value="Search" />
-}
-<div class="container" id="SearchResults">
+
+<div class="container" id="search-results">
     @if (Model != null && Model.Count() > 0)
     {
-        @Html.Partial("SearchResults", Model);
-    } 
+        @Html.Partial("SearchResults", Model)
+    }
 </div>
-

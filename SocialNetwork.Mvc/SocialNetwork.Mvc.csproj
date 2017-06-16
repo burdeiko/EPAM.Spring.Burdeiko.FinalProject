@@ -184,6 +184,7 @@
     <Compile Include="Models\DialogueViewModel.cs" />
     <Compile Include="Models\LogOnViewModel.cs" />
     <Compile Include="Models\MessageViewModel.cs" />
+    <Compile Include="Models\PagedList.cs" />
     <Compile Include="Models\PersonViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

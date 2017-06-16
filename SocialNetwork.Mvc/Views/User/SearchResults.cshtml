@@ -1,5 +1,7 @@
-﻿@model IEnumerable<SocialNetwork.Mvc.Models.PersonViewModel>
+﻿@model SocialNetwork.Mvc.Models.PagedList<SocialNetwork.Mvc.Models.PersonViewModel>
+@using SocialNetwork.Mvc.Infrastructure;
 @foreach (var item in Model)
 {
     @Html.Partial("UserPartial", item)
 }
+@Ajax.PageLinks(Model, page => Url.Action("Search", new { page }), new AjaxOptions { UpdateTargetId = "search-results", InsertionMode = InsertionMode.Replace }, null)

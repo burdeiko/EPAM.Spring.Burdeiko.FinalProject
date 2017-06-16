@@ -85,10 +85,15 @@ namespace SocialNetwork.Mvc.Controllers
         }
 
         [HttpGet]
-        public ActionResult Search()
+        public ActionResult Search(int? page)
         {
             IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            return View(personService.GetAllEntities().Select(m => m.ToMvcPerson()));
+            var result = new PagedList<PersonViewModel>(personService.GetAllEntities().Select(m => m.ToMvcPerson()), 2, page ?? 1);
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("SearchResults", result);
+            }
+            return View(result);
         }
 
         [HttpPost]

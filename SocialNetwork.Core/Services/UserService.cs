@@ -27,7 +27,10 @@ namespace SocialNetwork.Core.Services
         }
         public User GetUserByEMail(string eMail)
         {
-            return userRepository.GetByPredicate(ByEMail(eMail)).First().ToBllUser();
+            var users = userRepository.GetByPredicate(ByEMail(eMail));
+            if (users == null || users.Count() == 0)
+                return null;
+            return users.First().ToBllUser();
         }
         public void DeleteEntity(User user)
         {
