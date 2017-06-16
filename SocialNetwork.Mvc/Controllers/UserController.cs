@@ -85,28 +85,19 @@ namespace SocialNetwork.Mvc.Controllers
         }
 
         [HttpGet]
-        public ActionResult Search(int? page)
+        public ActionResult Search(int? page, string searchString)
         {
+            ViewBag.SearchString = searchString;
             IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            var result = new PagedList<PersonViewModel>(personService.GetAllEntities().Select(m => m.ToMvcPerson()), 2, page ?? 1);
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("SearchResults", result);
-            }
-            return View(result);
-        }
-
-        [HttpPost]
-        public ActionResult Search(string searchString)
-        {
-
-            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            var result = personService.FindByFirstName(searchString).Union(personService.FindByLastName(searchString)).Select(m => m.ToMvcPerson());
+            var result = personService.FindByFirstName(searchString).Select(m => m.ToMvcPerson());
             if (searchString == null)
                 result = personService.GetAllEntities().Select(m => m.ToMvcPerson());
+            var resultPaged = new PagedList<PersonViewModel>(result, 2, page ?? 1);
             if (Request.IsAjaxRequest())
-                return PartialView("SearchResults", result);
-            else return View(result);
+            {
+                return PartialView("SearchResults", resultPaged);
+            }
+            return View(resultPaged);
         }
 
         [ChildActionOnly]

@@ -4,4 +4,4 @@
 {
     @Html.Partial("UserPartial", item)
 }
-@Ajax.PageLinks(Model, page => Url.Action("Search", new { page }), new AjaxOptions { UpdateTargetId = "search-results", InsertionMode = InsertionMode.Replace }, null)
+@Ajax.PageLinks(Model, page => Url.Action("Search", new { page, searchString = ViewBag.SearchString }), new AjaxOptions { UpdateTargetId = "search-results", InsertionMode = InsertionMode.Replace }, null)
