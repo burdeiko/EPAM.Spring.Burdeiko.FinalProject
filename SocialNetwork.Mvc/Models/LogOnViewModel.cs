@@ -10,6 +10,7 @@ namespace SocialNetwork.Mvc.Models
     {
         [DataType(DataType.EmailAddress)]
         public string EMail { get; set; }
+        [Required(ErrorMessage = "Enter your password")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public bool RememberMe { get; set; }

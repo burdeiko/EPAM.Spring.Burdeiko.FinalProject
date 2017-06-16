@@ -70,5 +70,22 @@ namespace SocialNetwork.Core.Services
             var receivedMessages = messageRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<Dal.ORM.Message, int>(nameof(Dal.ORM.Message.ReceiverId), forPersonId)).Select(m => m.ToBllMessage());
             return sendedMessages.Select(m => m.ToId).Union(receivedMessages.Select(m => m.FromId)).Distinct();
         }
+
+        public IEnumerable<Message> GetLatestMessages(DateTime fromDate, int fromPersonId, int toPersonId)
+        {
+            var parameter = Expression.Parameter(typeof(Dal.ORM.Message));
+            var date = Expression.Property(parameter, "Date");
+            var from = Expression.Constant(fromDate);
+            var latest = Expression.GreaterThan(date, from);
+            var fromUser = Expression.Property(parameter, "SenderId");
+            var fromUserNeeded = Expression.Constant(fromPersonId);
+            var isFromUser = Expression.Equal(fromUser, fromUserNeeded);
+            var toUser = Expression.Property(parameter, "ReceiverId");
+            var toUserNeeded = Expression.Constant(toPersonId);
+            var isToUser = Expression.Equal(toUser, toUserNeeded);
+            var isMatch = Expression.AndAlso(latest, Expression.AndAlso(isFromUser, isToUser));
+            var searchExpression = Expression.Lambda<Func<Dal.ORM.Message, bool>>(isMatch, parameter);
+            return messageRepository.GetByPredicate(searchExpression).Select(m => m.ToBllMessage());
+        }
     }
 }

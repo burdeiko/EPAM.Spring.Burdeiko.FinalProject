@@ -178,6 +178,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\AjaxHelperExtension.cs" />
     <Compile Include="Infrastructure\DependencyResolver.cs" />
     <Compile Include="Infrastructure\Mappers.cs" />
     <Compile Include="Models\DialogueViewModel.cs" />
@@ -299,6 +300,7 @@
     <Content Include="Views\Messages\DialoguePartial.cshtml" />
     <Content Include="Views\Messages\MessagePartial.cshtml" />
     <Content Include="Views\Messages\DialoguePreview.cshtml" />
+    <Content Include="Views\Messages\NewMessagesPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

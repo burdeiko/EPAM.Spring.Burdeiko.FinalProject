@@ -1,6 +1,6 @@
 ﻿@model SocialNetwork.Mvc.Models.DialogueViewModel
 
-<div class="col-sm-11" id="message-container">
+<div class="col-sm-11" id="message-container" onload="Refresh()">
     @foreach (var message in Model.Messages)
     {
         @Html.Partial("MessagePartial", message)
@@ -9,29 +9,52 @@
 
 <div class="row">
    
-    @using (Ajax.BeginForm("SendMessage", new { }, new AjaxOptions { UpdateTargetId = "message-container", InsertionMode = InsertionMode.InsertAfter, OnSuccess = "ScrollToBottom" }, new { id = "message-form"}))
+    @using (Ajax.BeginForm("SendMessage", new { },
+        new AjaxOptions { UpdateTargetId = "message-container", InsertionMode = InsertionMode.InsertAfter, OnSuccess = "ScrollToBottom"}, 
+        new { id = "message-form"}))
     {
         <div class="col-xs-10">
-            <div class="form-group">
-            <textarea class="form-control" rows="3" name="message" id="message" onkeydown="SendMessage(event)"></textarea>
-            </div>
+            <textarea class="form-control" rows="3" name="message" id="message" onkeyup="SendMessage(event)"></textarea>
             @Html.Hidden("toId", Model.WithPersonId)
         </div>
 
         <div class="col-xs-1">
             <input type="submit" class="btn btn-default" value="send" id="submit-button"/>
+            @Ajax.ActionLink("Refresh", "GetLatestMessages",
+                new { fromUserId = Model.WithPersonId, fromDate = Model.Messages.Last().Time },
+                new AjaxOptions { UpdateTargetId = "message-container", InsertionMode = InsertionMode.InsertAfter, OnSuccess = "OnRefreshSuccess()" },
+                new { Class = "btn btn-default", id = "refresh-link" })
         </div>
     }
     <script type="text/javascript">
             function ScrollToBottom() {
                 document.getElementById('message-container').scrollTop = document.getElementById('message-container').scrollHeight;
-                document.getElementById('message').value = '';
             }
 
             function SendMessage(event) {
                 if (event.keyCode === 13) {
+                    var refreshLink = document.getElementById('refresh-link');
+                    refreshLink.click();
                     document.getElementById('submit-button').click();
+                    document.getElementById('message').value = '';
                 }
+            }
+
+                var link = document.getElementById('refresh-link');
+                setInterval(function () {
+                    
+                    link.click();
+                }, 5000);
+            
+
+            function OnRefreshSuccess(){
+                ScrollToBottom();
+                var link = document.getElementById('refresh-link');
+                var messages = document.getElementById('message-container');
+                var date = messages.children[messages.children.length - 1].children[1].children[0].children[0].innerHTML.trim();
+                date = date.replace(/(.*)\.(.*)\./, '$2' + '.' + '$1' + '.')
+                date = date.replace(/\./g, '/');
+                link.href = link.href.replace(/(fromDate=).*/, '$1' + encodeURIComponent(date));
             }
     </script>
 </div>

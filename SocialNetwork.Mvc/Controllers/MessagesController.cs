@@ -8,6 +8,7 @@ using System.Web;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace SocialNetwork.Mvc.Controllers
 {
@@ -58,6 +59,18 @@ namespace SocialNetwork.Mvc.Controllers
                 return null;
             var messageViewModel = messageService.SendMessage(currentUserId, toId.Value, message).ToMvcMessage();
             return PartialView("MessagePartial", messageViewModel);
+        }
+
+        public ActionResult GetLatestMessages(DateTime? fromDate, int? fromUserId)
+        {
+            if (fromDate.HasValue && fromUserId.HasValue)
+            {
+                var result = messageService.GetLatestMessages(fromDate.Value.Add(new TimeSpan(0,0,1)), fromUserId.Value, currentUserId).Select(m => m.ToMvcMessage());
+                if (result.Count() == 0)
+                    return null;
+                return PartialView("NewMessagesPartial", result);
+            }
+            return null;
         }
     }
 }

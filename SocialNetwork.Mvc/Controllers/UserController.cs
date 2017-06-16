@@ -42,11 +42,6 @@ namespace SocialNetwork.Mvc.Controllers
             return View(person);
         }
 
-        public ActionResult List()
-        {
-            return View();
-        }
-
         [HttpGet]
         public ActionResult Edit()
         {

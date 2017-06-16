@@ -15,5 +15,7 @@ namespace SocialNetwork.Core.Interfaces
         IEnumerable<Message> GetDialoguesPreview(int forPersonId);
 
         IEnumerable<int> GetTalkersIds(int forPersonId);
+
+        IEnumerable<Message> GetLatestMessages(DateTime fromDate, int fromPersonId, int toPersonId);
     }
 }
