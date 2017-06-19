@@ -7,6 +7,9 @@ using SocialNetwork.Dal.ORM;
 
 namespace SocialNetwork.Core.Infrastructure
 {
+    /// <summary>
+    /// Provides extensions for object mapping
+    /// </summary>
     public static class Mappers
     {
         public static Dal.ORM.User ToDalUser(this User user)

@@ -11,14 +11,17 @@ namespace SocialNetwork.Core.Services
 {
     public class RoleService: IRoleService
     {
+        #region Fields
         private readonly IUnitOfWork uow;
         private readonly IRepository<Dal.ORM.Role> roleRepository;
+        #endregion
+        #region Constructor
         public RoleService(IUnitOfWork uow, IRepository<Dal.ORM.Role> repository)
         {
             this.uow = uow;
             this.roleRepository = repository;
         }
-
+        #endregion
         #region Public Methods
         public void DeleteEntity(Role role)
         {

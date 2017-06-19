@@ -2,11 +2,13 @@
 using SocialNetwork.Dal.Interfaces;
 using System;
 using NLog;
+using LoggerImplementation;
 
 namespace SocialNetwork.Dal.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private static readonly ILogger logger = new LoggerFactory().GetLogger();
         public DbContext Context { get; private set; }
 
         public UnitOfWork(DbContext context)
@@ -22,9 +24,11 @@ namespace SocialNetwork.Dal.Infrastructure
                 {
                     Context.SaveChanges();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    
+                    logger.Info("Unhandled exception");
+                    logger.Error(e.StackTrace);
+                    throw;
                 }
             }
         }

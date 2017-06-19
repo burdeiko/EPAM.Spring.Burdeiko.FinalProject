@@ -11,14 +11,17 @@ namespace SocialNetwork.Core.Services
 {
     public class UserService : IUserService
     {
+        #region Fields
         private readonly IUnitOfWork uow;
         private readonly IRepository<Dal.ORM.User> userRepository;
+        #endregion
+        #region Constructor
         public UserService(IUnitOfWork uow, IRepository<Dal.ORM.User> repository)
         {
             this.uow = uow;
             this.userRepository = repository;
         }
-
+        #endregion
         #region Public Methods
 
         public User GetUser(int id)

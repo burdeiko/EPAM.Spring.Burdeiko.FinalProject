@@ -16,14 +16,19 @@ namespace SocialNetwork.Mvc.Controllers
     [Authorize]
     public class FriendsController : Controller
     {
+        #region Fields
+        private readonly IUserService userService;
+        private readonly IPersonService personService;
         private static readonly ILogger logger = System.Web.Mvc.DependencyResolver.Current.GetService<ILogger>();
+        #endregion
+        #region Constructor
         public FriendsController(IUserService userService, IPersonService personService)
         {
             this.userService = userService;
             this.personService = personService;
         }
-        private readonly IUserService userService;
-        private readonly IPersonService personService;
+        #endregion
+        #region Action Methods
         // GET: Friends
         public ActionResult Index()
         {
@@ -108,5 +113,6 @@ namespace SocialNetwork.Mvc.Controllers
                 return RedirectToAction("Index", "Home");
             return Redirect(returnUrl);
         }
+        #endregion
     }
 }

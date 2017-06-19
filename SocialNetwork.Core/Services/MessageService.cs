@@ -13,13 +13,24 @@ namespace SocialNetwork.Core.Services
 {
     public class MessageService : IMessageService
     {
+        #region Fields
         private readonly IUnitOfWork uow;
         private readonly IRepository<Dal.ORM.Message> messageRepository;
+        #endregion
+        #region Constructor
         public MessageService(IUnitOfWork uow, IRepository<Dal.ORM.Message> repository)
         {
             this.uow = uow;
             this.messageRepository = repository;
         }
+        #endregion
+        #region Public Methods
+        /// <summary>
+        /// Gets all the messages sended to or received from the other user
+        /// </summary>
+        /// <param name="currentId">The id of the user sended request</param>
+        /// <param name="otherId">The id of the other user</param>
+        /// <returns></returns>
         public IEnumerable<Message> GetDialogueWith(int currentId, int otherId)
         {
             var sendedMessages = messageRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<SocialNetwork.Dal.ORM.Message, int>(nameof(Dal.ORM.Message.SenderId), currentId)).Where(m => m.ReceiverId == otherId);
@@ -27,6 +38,13 @@ namespace SocialNetwork.Core.Services
             return sendedMessages.Union(receivedMessages).OrderBy(m => m.Date).Select(m => m.ToBllMessage());
         }
 
+        /// <summary>
+        /// Sends a message
+        /// </summary>
+        /// <param name="senderId">The sender id</param>
+        /// <param name="receiverId">The receiver id</param>
+        /// <param name="message">The message to send</param>
+        /// <returns></returns>
         public Message SendMessage(int senderId, int receiverId, string message)
         {
             var newMessage = new Message { FromId = senderId, ToId = receiverId, MessageString = message, Time = DateTime.Now };
@@ -35,35 +53,11 @@ namespace SocialNetwork.Core.Services
             return newMessage;
         }
 
-        public IEnumerable<Message> GetDialoguesPreview(int forPersonId)
-        {
-            var sendedMessages = messageRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<SocialNetwork.Dal.ORM.Message, int>(nameof(Dal.ORM.Message.SenderId), forPersonId)).Select(m => m.ToBllMessage());
-            var receivedMessages = messageRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<SocialNetwork.Dal.ORM.Message, int>(nameof(Dal.ORM.Message.ReceiverId), forPersonId)).Select(m => m.ToBllMessage());
-            sendedMessages = sendedMessages.OrderBy(m => m.ToId).ThenBy(m => m.Time).Reverse();
-            List<Message> previewSendedMessages = new List<Message>();
-            int lastTalkerId = -1;
-            foreach (var message in sendedMessages)
-            {
-                if (message.ToId != lastTalkerId)
-                {
-                    lastTalkerId = message.ToId;
-                    previewSendedMessages.Add(message);
-                }
-            }
-            lastTalkerId = -1;
-            List<Message> previewReceivedMessages = new List<Message>();
-            foreach (var message in receivedMessages)
-            {
-                if (message.FromId != lastTalkerId)
-                {
-                    lastTalkerId = message.FromId;
-                    previewReceivedMessages.Add(message);
-                }
-            }
-            var previewMessages = previewSendedMessages.Join(previewReceivedMessages, m => m.ToId, m => m.FromId, (m1, m2) => m1.Time > m2.Time ? m1 : m2).Union(sendedMessages.Where(m => !receivedMessages.Select(mod => mod.FromId).Contains(m.ToId))).Union(receivedMessages.Where(m => !sendedMessages.Select(mod => mod.ToId).Contains(m.FromId)));
-            return previewMessages;
-        }
-
+        /// <summary>
+        /// Gets the people that have messages with specified person
+        /// </summary>
+        /// <param name="forPersonId">The person's id</param>
+        /// <returns></returns>
         public IEnumerable<int> GetTalkersIds(int forPersonId)
         {
             var sendedMessages = messageRepository.GetByPredicate(SearchExpressionBuilder.ByProperty<Dal.ORM.Message, int>(nameof(Dal.ORM.Message.SenderId), forPersonId)).Select(m => m.ToBllMessage());
@@ -71,6 +65,13 @@ namespace SocialNetwork.Core.Services
             return sendedMessages.Select(m => m.ToId).Union(receivedMessages.Select(m => m.FromId)).Distinct();
         }
 
+        /// <summary>
+        /// Gets all the messages from one person to another sended since the specified date
+        /// </summary>
+        /// <param name="fromDate">The date to search from</param>
+        /// <param name="fromPersonId">The sender of the messages</param>
+        /// <param name="toPersonId">The receiver of the messages</param>
+        /// <returns></returns>
         public IEnumerable<Message> GetLatestMessages(DateTime fromDate, int fromPersonId, int toPersonId)
         {
             var parameter = Expression.Parameter(typeof(Dal.ORM.Message));
@@ -87,5 +88,6 @@ namespace SocialNetwork.Core.Services
             var searchExpression = Expression.Lambda<Func<Dal.ORM.Message, bool>>(isMatch, parameter);
             return messageRepository.GetByPredicate(searchExpression).Select(m => m.ToBllMessage());
         }
+        #endregion
     }
 }

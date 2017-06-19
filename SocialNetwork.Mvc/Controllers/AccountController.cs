@@ -10,15 +10,21 @@ namespace SocialNetwork.Mvc.Controllers
 {
     public class AccountController : Controller
     {
+        #region Constant
         private static readonly ILogger logger = System.Web.Mvc.DependencyResolver.Current.GetService<ILogger>();
+        #endregion
+        #region Constructor
         public AccountController(IUserService userService, IRoleService roleService)
         {
             this.userService = userService;
             this.roleService = roleService;
         }
+        #endregion
+        #region Fields
         private readonly IUserService userService;
         private readonly IRoleService roleService;
-
+        #endregion
+        #region Action Methods
         [HttpGet]
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -124,5 +130,6 @@ namespace SocialNetwork.Mvc.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
+        #endregion
     }
 }

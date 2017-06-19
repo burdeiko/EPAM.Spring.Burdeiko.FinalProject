@@ -13,16 +13,19 @@ namespace SocialNetwork.Core.Services
 {
     public class PersonService : IPersonService
     {
+        #region Fields
         private readonly IUnitOfWork uow;
         private readonly IRepository<Dal.ORM.Person> personRepository;
         private readonly IFriendRequestRepository friendRepository;
+        #endregion
+        #region Constructor
         public PersonService(IUnitOfWork uow, IRepository<Dal.ORM.Person> repository, IFriendRequestRepository friendRepository)
         {
             this.uow = uow;
             this.personRepository = repository;
             this.friendRepository = friendRepository;
         }
-
+        #endregion
         #region Public Methods
         public void DeleteEntity(Person person)
         {
@@ -84,17 +87,29 @@ namespace SocialNetwork.Core.Services
 
         public void AcceptFriendRequest(int senderId, int receiverId)
         {
-            var request = friendRepository.GetById(senderId, receiverId);
-            //if (request == null)
-            //    throw new ArgumentException();
-            request.IsConfirmed = true;
-            friendRepository.Update(request);
-            uow.Commit();
-        }
+            try
+            {
 
+                var request = friendRepository.GetById(senderId, receiverId);
+                request.IsConfirmed = true;
+                friendRepository.Update(request);
+                uow.Commit();
+            }
+            catch(Exception e)
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// Searches for a person with specified Last Name
+        /// </summary>
+        /// <param name="lastName">Last name to search</param>
+        /// <returns>The collection of people with last name provided</returns>
         public IEnumerable<Person> FindByLastName(string lastName)
         {
-            var searchExpression = SearchExpressionBuilder.ByProperty<Dal.ORM.Person, string>(nameof(Dal.ORM.Person.FirstName), lastName);
+            if (string.IsNullOrEmpty(lastName))
+                throw new ArgumentNullException(nameof(lastName));
+            var searchExpression = SearchExpressionBuilder.ByProperty<Dal.ORM.Person, string>(nameof(Dal.ORM.Person.LastName), lastName);
             return personRepository.GetByPredicate(searchExpression).Select(m => m.ToBllPerson());
         }
         #endregion

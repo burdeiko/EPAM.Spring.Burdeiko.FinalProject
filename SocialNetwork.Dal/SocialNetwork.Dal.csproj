@@ -73,7 +73,12 @@
     <Compile Include="ORM\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\LoggerImplementation\LoggerImplementation.csproj">
+      <Project>{9a1d618b-f48f-4854-a809-f99acf3f9314}</Project>
+      <Name>LoggerImplementation</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />

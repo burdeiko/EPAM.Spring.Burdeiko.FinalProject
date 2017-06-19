@@ -9,6 +9,14 @@ namespace SocialNetwork.Core.Infrastructure
 {
     public static class SearchExpressionBuilder
     {
+        /// <summary>
+        /// Builds an expression to search for entities by property provided
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity to search</typeparam>
+        /// <typeparam name="TProperty">the type of the property</typeparam>
+        /// <param name="propertyName">The name of the property</param>
+        /// <param name="propertyValue">The value to search</param>
+        /// <returns>Expression requested</returns>
         public static Expression<Func<TEntity, bool>> ByProperty<TEntity, TProperty>(string propertyName, TProperty propertyValue)
         {
             if (typeof(TEntity).GetProperty(propertyName) == null)

@@ -38,6 +38,10 @@ namespace DependencyResolver
             kernel.Bind<IRepository<Role>>().To<RoleRepository>();
             kernel.Bind<IRoleService>().To<RoleService>();
             kernel.Bind<IPersonService>().To<PersonService>();
+            kernel.Bind<IFriendRequestRepository>().To<FriendRequestRepository>();
+            kernel.Bind<IRepository<Message>>().To<MessageRepository>();
+            kernel.Bind<IMessageService>().To<MessageService>();
+            kernel.Bind<ILogger>().ToMethod(m => new LoggerImplementation.LoggerFactory().GetLogger());
         }
     }
 }

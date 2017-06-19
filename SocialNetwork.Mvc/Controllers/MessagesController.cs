@@ -15,12 +15,16 @@ namespace SocialNetwork.Mvc.Controllers
     [Authorize]
     public class MessagesController : Controller
     {
-
+        #region Constructor
         public MessagesController(IMessageService messageService)
         {
             this.messageService = messageService;
         }
+        #endregion
+        #region Field
         private readonly IMessageService messageService;
+        #endregion
+        #region Private Property
         private int currentUserId
         {
             get
@@ -28,6 +32,8 @@ namespace SocialNetwork.Mvc.Controllers
                 return System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>().GetUserByEMail(User.Identity.Name).Id;
             }
         }
+        #endregion
+        #region Action Methods
         // GET: Messages
         public ActionResult Index()
         {
@@ -72,5 +78,6 @@ namespace SocialNetwork.Mvc.Controllers
             }
             return null;
         }
+        #endregion
     }
 }

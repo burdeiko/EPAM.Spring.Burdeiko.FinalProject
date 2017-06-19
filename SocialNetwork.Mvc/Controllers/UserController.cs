@@ -89,7 +89,9 @@ namespace SocialNetwork.Mvc.Controllers
         {
             ViewBag.SearchString = searchString;
             IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            var result = personService.FindByFirstName(searchString).Select(m => m.ToMvcPerson());
+            var result = personService.FindByFirstName(searchString).Select(m => m.ToMvcPerson()).Union(personService.FindByLastName(searchString).Select(m => m.ToMvcPerson()));
+            if (result.Count() == 0 && !string.IsNullOrEmpty(searchString))
+                return Content("Nothing found!");
             if (searchString == null)
                 result = personService.GetAllEntities().Select(m => m.ToMvcPerson());
             var resultPaged = new PagedList<PersonViewModel>(result, 2, page ?? 1);
