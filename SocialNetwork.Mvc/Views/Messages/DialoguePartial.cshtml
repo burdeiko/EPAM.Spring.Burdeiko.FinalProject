@@ -1,14 +1,19 @@
 ﻿@model SocialNetwork.Mvc.Models.DialogueViewModel
 
 <div class="col-sm-11" id="message-container" onload="Refresh()">
-    @foreach (var message in Model.Messages)
+    <div class="row">
+
+    </div>
+    @if (Model.Messages != null)
     {
-        @Html.Partial("MessagePartial", message)
+        foreach (var message in Model.Messages)
+        {
+            @Html.Partial("MessagePartial", message)
+        }
     }
 </div>
 
 <div class="row">
-   
     @using (Ajax.BeginForm("SendMessage", new { },
         new AjaxOptions { UpdateTargetId = "message-container", InsertionMode = InsertionMode.InsertAfter, OnSuccess = "ScrollToBottom"}, 
         new { id = "message-form"}))
@@ -21,7 +26,7 @@
         <div class="col-xs-1">
             <input type="submit" class="btn btn-default" value="send" id="submit-button"/>
             @Ajax.ActionLink("Refresh", "GetLatestMessages",
-                new { fromUserId = Model.WithPersonId, fromDate = Model.Messages.Last().Time },
+                new { fromUserId = Model.WithPersonId, fromDate = ViewBag.LastUpdate },
                 new AjaxOptions { UpdateTargetId = "message-container", InsertionMode = InsertionMode.InsertAfter, OnSuccess = "OnRefreshSuccess()" },
                 new { Class = "btn btn-default", id = "refresh-link" })
         </div>

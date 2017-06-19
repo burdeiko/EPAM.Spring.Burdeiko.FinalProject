@@ -14,5 +14,10 @@ namespace SocialNetwork.Mvc.Controllers
             Response.StatusCode = 404;
             return View();
         }
+        public ActionResult NotAvailable()
+        {
+            Response.StatusCode = 503;
+            return View();
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace SocialNetwork.Mvc.Controllers
             IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
             var image = personService.GetById(id).Avatar;
             if (image == null)
-                return null;
+                return File("~/Content/images/NoAvatar.jpg", "image/jpg");
             return File(image, "image/jpg");
         }
 

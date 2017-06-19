@@ -31,11 +31,10 @@ namespace SocialNetwork.Mvc.Controllers
         // GET: Messages
         public ActionResult Index()
         {
-            var hasDialoguesWithIds = messageService.GetTalkersIds(currentUserId);
             var personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            var hasDialoguesWith = hasDialoguesWithIds.Select(m => personService.GetById(m));
+            var friends = personService.GetFriends(currentUserId);
             var model = new List<DialogueViewModel>();
-            foreach (var person in hasDialoguesWith)
+            foreach (var person in friends)
             {
                 model.Add(new DialogueViewModel {
                     WithPersonId = person.Id,
@@ -49,6 +48,7 @@ namespace SocialNetwork.Mvc.Controllers
         public ActionResult Dialogue(int withId)
         {
             var dialogue = new DialogueViewModel { Messages = messageService.GetDialogueWith(currentUserId, withId).Select(m => m.ToMvcMessage()), WithPersonId = withId };
+            ViewBag.LastUpdate = dialogue.Messages.Count() == 0 ? DateTime.Now : dialogue.Messages.Last().Time;
             return PartialView("DialoguePartial", dialogue);
         }
 

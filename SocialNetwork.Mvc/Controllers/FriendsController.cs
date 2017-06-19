@@ -8,43 +8,84 @@ using System.Web;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using NLog;
+using System;
 
 namespace SocialNetwork.Mvc.Controllers
 {
     [Authorize]
     public class FriendsController : Controller
     {
+        private static readonly ILogger logger = System.Web.Mvc.DependencyResolver.Current.GetService<ILogger>();
+        public FriendsController(IUserService userService, IPersonService personService)
+        {
+            this.userService = userService;
+            this.personService = personService;
+        }
+        private readonly IUserService userService;
+        private readonly IPersonService personService;
         // GET: Friends
         public ActionResult Index()
         {
-            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            IUserService userService = System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>();
-            int id = userService.GetUserByEMail(User.Identity.Name).Id;
+            int id = -1;
+            try
+            {
+                id = userService.GetUserByEMail(User.Identity.Name).Id;
+            }
+            catch (Exception e)
+            {
+                logger.Info("Unhandled exception");
+                logger.Error(e.StackTrace);
+                Response.StatusCode = 503;
+            }
             return View(personService.GetFriends(id).Select(m => m.ToMvcPerson()));
         }
 
         public ActionResult IncomingRequests()
         {
-            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            IUserService userService = System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>();
-            int id = userService.GetUserByEMail(User.Identity.Name).Id;
+            int id = -1;
+            try
+            {
+                id = userService.GetUserByEMail(User.Identity.Name).Id;
+            }
+            catch (Exception e)
+            {
+                logger.Info("Unhandled exception");
+                logger.Error(e.StackTrace);
+                Response.StatusCode = 503;
+            }
             return View("Index", personService.GetFriendRequestSenders(id).Select(m => m.ToMvcPerson()));
         }
 
         public ActionResult OutcomingRequests()
         {
-            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            IUserService userService = System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>();
-            int id = userService.GetUserByEMail(User.Identity.Name).Id;
+            int id = -1;
+            try
+            {
+                id = userService.GetUserByEMail(User.Identity.Name).Id;
+            }
+            catch (Exception e)
+            {
+                logger.Info("Unhandled exception");
+                logger.Error(e.StackTrace);
+                Response.StatusCode = 503;
+            }
             return View("Index", personService.GetFriendRequestReceivers(id).Select(m => m.ToMvcPerson()));
         }
 
         public ActionResult SendFriendRequest(int? receiverId, string returnUrl)
         {
-            IUserService userService = System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>();
-            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            int senderId = userService.GetUserByEMail(User.Identity.Name).Id;
-            personService.SendFriendRequest(senderId, receiverId.Value);
+            try
+            {
+                int senderId = userService.GetUserByEMail(User.Identity.Name).Id;
+                personService.SendFriendRequest(senderId, receiverId.Value);
+            }
+            catch (Exception e)
+            {
+                logger.Info("Unhandled exception");
+                logger.Error(e.StackTrace);
+                Response.StatusCode = 503;
+            }
             if (returnUrl == null)
                 return RedirectToAction("Index", "Home");
             return Redirect(returnUrl);
@@ -52,10 +93,17 @@ namespace SocialNetwork.Mvc.Controllers
 
         public ActionResult AcceptFriendRequest(int? senderId, string returnUrl)
         {
-            IUserService userService = System.Web.Mvc.DependencyResolver.Current.GetService<IUserService>();
-            IPersonService personService = System.Web.Mvc.DependencyResolver.Current.GetService<IPersonService>();
-            int receiverId = userService.GetUserByEMail(User.Identity.Name).Id;
-            personService.AcceptFriendRequest(senderId.Value, receiverId);
+            try
+            {
+                int receiverId = userService.GetUserByEMail(User.Identity.Name).Id;
+                personService.AcceptFriendRequest(senderId.Value, receiverId);
+            }
+            catch (Exception e)
+            {
+                logger.Info("Unhandled exception");
+                logger.Error(e.StackTrace);
+                Response.StatusCode = 503;
+            }
             if (returnUrl == null)
                 return RedirectToAction("Index", "Home");
             return Redirect(returnUrl);

@@ -6,6 +6,8 @@ using SocialNetwork.Dal.ORM;
 using System.Data.Entity;
 using Ninject;
 using Ninject.Web.Common;
+using NLog;
+using LoggerImplementation;
 
 namespace DependencyResolver
 {
@@ -24,6 +26,7 @@ namespace DependencyResolver
             kernel.Bind<IFriendRequestRepository>().To<FriendRequestRepository>();
             kernel.Bind<IRepository<Message>>().To<MessageRepository>();
             kernel.Bind<IMessageService>().To<MessageService>();
+            kernel.Bind<ILogger>().ToMethod(m => new LoggerImplementation.LoggerFactory().GetLogger());
         }
 
         public static void ConfigurateForConsole(this IKernel kernel)

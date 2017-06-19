@@ -3,11 +3,14 @@ using SocialNetwork.Core.Interfaces;
 using SocialNetwork.Mvc.Models;
 using System.Web.Security;
 using SocialNetwork.Mvc.Providers;
+using System;
+using NLog;
 
 namespace SocialNetwork.Mvc.Controllers
 {
     public class AccountController : Controller
     {
+        private static readonly ILogger logger = System.Web.Mvc.DependencyResolver.Current.GetService<ILogger>();
         public AccountController(IUserService userService, IRoleService roleService)
         {
             this.userService = userService;
@@ -15,11 +18,7 @@ namespace SocialNetwork.Mvc.Controllers
         }
         private readonly IUserService userService;
         private readonly IRoleService roleService;
-        // GET: Account
-        public ActionResult Index()
-        {
-            return View();
-        }
+
         [HttpGet]
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -39,22 +38,31 @@ namespace SocialNetwork.Mvc.Controllers
                 return RedirectToAction("Index", "Home");
             if (ModelState.IsValid)
             {
-                if (Membership.ValidateUser(viewModel.EMail, viewModel.Password))
+                try
                 {
-                    FormsAuthentication.SetAuthCookie(viewModel.EMail, viewModel.RememberMe);
-                    if (Url.IsLocalUrl(returnUrl))
+                    if (Membership.ValidateUser(viewModel.EMail, viewModel.Password))
                     {
-                        
-                        return Redirect(returnUrl);
+                        FormsAuthentication.SetAuthCookie(viewModel.EMail, viewModel.RememberMe);
+                        if (Url.IsLocalUrl(returnUrl))
+                        {
+
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        ModelState.AddModelError("", "Incorrect login or password.");
                     }
                 }
-                else
+                catch (Exception e )
                 {
-                    ModelState.AddModelError("", "Incorrect login or password.");
+                    logger.Info("Unhandled exception");
+                    logger.Error(e.StackTrace);
+                    Response.StatusCode = 503;
                 }
             }
             return View(viewModel);
@@ -74,28 +82,37 @@ namespace SocialNetwork.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel viewModel)
         {
-            var userExists = userService.GetUserByEMail(viewModel.Email) != null;
-
-            if (userExists)
+            try
             {
-                ModelState.AddModelError("", "User with this address already exists.");
-                return View(viewModel);
+                var userExists = userService.GetUserByEMail(viewModel.Email) != null;
+
+                if (userExists)
+                {
+                    ModelState.AddModelError("", "User with this address already exists.");
+                    return View(viewModel);
+                }
+
+                if (ModelState.IsValid)
+                {
+                    var membershipUser = ((CustomMembershipProvider)Membership.Provider)
+                        .CreateUser(viewModel.Email, viewModel.Password, viewModel.FirstName, viewModel.LastName);
+
+                    if (membershipUser != null)
+                    {
+                        FormsAuthentication.SetAuthCookie(viewModel.Email, false);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Error occured while trying to registrate.");
+                    }
+                }
             }
-
-            if (ModelState.IsValid)
+            catch (Exception e)
             {
-                var membershipUser = ((CustomMembershipProvider)Membership.Provider)
-                    .CreateUser(viewModel.Email, viewModel.Password, viewModel.FirstName, viewModel.LastName);
-
-                if (membershipUser != null)
-                {
-                    FormsAuthentication.SetAuthCookie(viewModel.Email, false);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Error occured while trying to registrate.");
-                }
+                logger.Info("Unhandled exception");
+                logger.Error(e.StackTrace);
+                Response.StatusCode = 503;
             }
             return View(viewModel);
         }

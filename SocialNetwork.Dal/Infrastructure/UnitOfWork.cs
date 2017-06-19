@@ -1,5 +1,7 @@
 ﻿using System.Data.Entity;
 using SocialNetwork.Dal.Interfaces;
+using System;
+using NLog;
 
 namespace SocialNetwork.Dal.Infrastructure
 {
@@ -16,7 +18,14 @@ namespace SocialNetwork.Dal.Infrastructure
         {
             if (Context != null)
             {
-                Context.SaveChanges();
+                try
+                {
+                    Context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    
+                }
             }
         }
 

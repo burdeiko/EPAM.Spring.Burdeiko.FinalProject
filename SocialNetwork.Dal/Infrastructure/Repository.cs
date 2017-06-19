@@ -4,6 +4,7 @@ using System.Linq;
 using SocialNetwork.Dal.Interfaces;
 using System.Linq.Expressions;
 using System.Data.Entity;
+using NLog;
 
 namespace SocialNetwork.Dal.Infrastructure
 {
