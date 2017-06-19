@@ -108,7 +108,7 @@ namespace SocialNetwork.Core.Services
         public IEnumerable<Person> FindByLastName(string lastName)
         {
             if (string.IsNullOrEmpty(lastName))
-                throw new ArgumentNullException(nameof(lastName));
+                return new Person[0];
             var searchExpression = SearchExpressionBuilder.ByProperty<Dal.ORM.Person, string>(nameof(Dal.ORM.Person.LastName), lastName);
             return personRepository.GetByPredicate(searchExpression).Select(m => m.ToBllPerson());
         }

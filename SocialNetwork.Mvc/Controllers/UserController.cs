@@ -30,7 +30,10 @@ namespace SocialNetwork.Mvc.Controllers
             {
                 person = personService.GetById(id.Value).ToMvcPerson();
                 if (person == null)
-                    throw new HttpException(404, "Page not found");
+                {
+                    Response.StatusCode = 404;
+                    return null;
+                }
                 ViewBag.Email = userService.GetUser(id.Value).EMail;
             }
             else
@@ -92,7 +95,7 @@ namespace SocialNetwork.Mvc.Controllers
             var result = personService.FindByFirstName(searchString).Select(m => m.ToMvcPerson()).Union(personService.FindByLastName(searchString).Select(m => m.ToMvcPerson()));
             if (result.Count() == 0 && !string.IsNullOrEmpty(searchString))
                 return Content("Nothing found!");
-            if (searchString == null)
+            if (string.IsNullOrEmpty(searchString))
                 result = personService.GetAllEntities().Select(m => m.ToMvcPerson());
             var resultPaged = new PagedList<PersonViewModel>(result, 2, page ?? 1);
             if (Request.IsAjaxRequest())
